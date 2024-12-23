@@ -39,6 +39,12 @@ const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) => {
     );
   };
 
+  const formatPrice = (price: number) => {
+    // Ensure price is a number and format it
+    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return !isNaN(numericPrice) ? numericPrice.toFixed(2) : '0.00';
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -58,7 +64,7 @@ const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) => {
             <TableRow key={product.id}>
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>{product.category}</TableCell>
-              <TableCell>${product.price.toFixed(2)}</TableCell>
+              <TableCell>${formatPrice(product.price)}</TableCell>
               <TableCell>{getStockBadge(product.stock)}</TableCell>
               <TableCell>{product.size}</TableCell>
               <TableCell>{product.color}</TableCell>

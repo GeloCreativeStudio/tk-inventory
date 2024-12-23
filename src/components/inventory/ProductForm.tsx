@@ -37,9 +37,19 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
     },
   });
 
+  const handleSubmit = (data: Partial<Product>) => {
+    // Ensure price is a number
+    const formattedData = {
+      ...data,
+      price: Number(data.price),
+      stock: Number(data.stock),
+    };
+    onSubmit(formattedData);
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -87,7 +97,12 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.01" {...field} />
+                  <Input 
+                    type="number" 
+                    step="0.01" 
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -101,7 +116,11 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
               <FormItem>
                 <FormLabel>Stock</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input 
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
