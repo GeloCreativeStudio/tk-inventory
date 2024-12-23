@@ -12,6 +12,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Product {
   id: string;
@@ -53,9 +69,22 @@ const mockProducts: Product[] = [
   },
 ];
 
+const categories = ["Clothing", "Footwear", "Accessories"];
+const sizes = ["XS", "S", "M", "L", "XL", "32", "34", "36", "38", "40", "42"];
+const colors = ["Black", "White", "Blue", "Red", "Green", "Yellow"];
+
 const Inventory = () => {
-  const [products] = useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const [newProduct, setNewProduct] = useState<Partial<Product>>({
+    name: "",
+    category: "",
+    price: 0,
+    stock: 0,
+    size: "",
+    color: "",
+  });
 
   const getStockStatus = (stock: number) => {
     if (stock <= 5) return "critical";
@@ -69,19 +98,48 @@ const Inventory = () => {
       critical: "destructive",
       warning: "warning",
       normal: "secondary",
-    };
+    } as const;
 
     return (
-      <Badge variant={variants[status as keyof typeof variants]}>
+      <Badge variant={variants[status]}>
         {stock} in stock
       </Badge>
     );
   };
 
   const handleAddProduct = () => {
+    if (!newProduct.name || !newProduct.category || !newProduct.size || !newProduct.color) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const product: Product = {
+      id: (products.length + 1).toString(),
+      name: newProduct.name,
+      category: newProduct.category,
+      price: Number(newProduct.price) || 0,
+      stock: Number(newProduct.stock) || 0,
+      size: newProduct.size,
+      color: newProduct.color,
+    };
+
+    setProducts([...products, product]);
+    setNewProduct({
+      name: "",
+      category: "",
+      price: 0,
+      stock: 0,
+      size: "",
+      color: "",
+    });
+    setOpen(false);
     toast({
-      title: "Coming Soon",
-      description: "Product creation will be implemented in the next update.",
+      title: "Success",
+      description: "Product added successfully",
     });
   };
 
@@ -95,9 +153,119 @@ const Inventory = () => {
               Manage your inventory items here.
             </p>
           </div>
-          <Button onClick={handleAddProduct}>
-            <Plus className="mr-2 h-4 w-4" /> Add Product
-          </Button>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add Product
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Product</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    value={newProduct.name}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, name: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={newProduct.category}
+                    onValueChange={(value) =>
+                      setNewProduct({ ...newProduct, category: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="price">Price</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={newProduct.price}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        price: parseFloat(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="stock">Stock</Label>
+                  <Input
+                    id="stock"
+                    type="number"
+                    value={newProduct.stock}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        stock: parseInt(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="size">Size</Label>
+                  <Select
+                    value={newProduct.size}
+                    onValueChange={(value) =>
+                      setNewProduct({ ...newProduct, size: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sizes.map((size) => (
+                        <SelectItem key={size} value={size}>
+                          {size}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="color">Color</Label>
+                  <Select
+                    value={newProduct.color}
+                    onValueChange={(value) =>
+                      setNewProduct({ ...newProduct, color: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {colors.map((color) => (
+                        <SelectItem key={color} value={color}>
+                          {color}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handleAddProduct}>Add Product</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="rounded-md border">
