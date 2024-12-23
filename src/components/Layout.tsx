@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from "@/components/ui/button";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,10 +9,15 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   return (
@@ -25,24 +30,36 @@ const Layout = ({ children }: LayoutProps) => {
                 <span className="text-xl font-bold text-primary">Inventory System</span>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <a
-                  href="/dashboard"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                <Link
+                  to="/dashboard"
+                  className={`${
+                    isActive('/dashboard')
+                      ? 'border-primary text-gray-900'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
                 >
                   Dashboard
-                </a>
-                <a
-                  href="/inventory"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                </Link>
+                <Link
+                  to="/inventory"
+                  className={`${
+                    isActive('/inventory')
+                      ? 'border-primary text-gray-900'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
                 >
                   Inventory
-                </a>
-                <a
-                  href="/orders"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                </Link>
+                <Link
+                  to="/orders"
+                  className={`${
+                    isActive('/orders')
+                      ? 'border-primary text-gray-900'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
                 >
                   Orders
-                </a>
+                </Link>
               </div>
             </div>
             <div className="flex items-center">
