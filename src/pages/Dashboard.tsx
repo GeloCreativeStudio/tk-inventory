@@ -1,92 +1,74 @@
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import StatsCard from '@/components/dashboard/StatsCard';
+import SalesChart from '@/components/dashboard/SalesChart';
 
 const Dashboard = () => {
   const { user } = useAuth();
 
   const AdminDashboard = () => (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="space-y-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatsCard 
+          title="Total Products"
+          value="120"
+          description="+4 from last month"
+        />
+        <StatsCard 
+          title="Total Stock Value"
+          value="$12,234"
+          description="+2.1% from last month"
+        />
+        <StatsCard 
+          title="Low Stock Items"
+          value="7"
+          description="Requires attention"
+        />
+        <StatsCard 
+          title="Total Orders"
+          value="432"
+          description="+19% from last month"
+        />
+      </div>
+      
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+        <CardHeader>
+          <CardTitle>Monthly Sales</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">120</div>
-          <p className="text-xs text-muted-foreground">
-            +4 from last month
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Stock Value</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">$12,234</div>
-          <p className="text-xs text-muted-foreground">
-            +2.1% from last month
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">7</div>
-          <p className="text-xs text-muted-foreground">
-            Requires attention
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">432</div>
-          <p className="text-xs text-muted-foreground">
-            +19% from last month
-          </p>
+          <SalesChart />
         </CardContent>
       </Card>
     </div>
   );
 
   const StaffDashboard = () => (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <StatsCard 
+          title="Pending Orders"
+          value="12"
+          description="Requires processing"
+        />
+        <StatsCard 
+          title="Processing Orders"
+          value="8"
+          description="In progress"
+        />
+        <StatsCard 
+          title="Completed Today"
+          value="24"
+          description="+3 from yesterday"
+        />
+      </div>
+      
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
+        <CardHeader>
+          <CardTitle>Your Performance</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">12</div>
-          <p className="text-xs text-muted-foreground">
-            Requires processing
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Processing Orders</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">8</div>
-          <p className="text-xs text-muted-foreground">
-            In progress
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Completed Today</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">24</div>
-          <p className="text-xs text-muted-foreground">
-            +3 from yesterday
-          </p>
+          <SalesChart />
         </CardContent>
       </Card>
     </div>
