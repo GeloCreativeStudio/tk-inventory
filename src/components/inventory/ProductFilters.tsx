@@ -49,7 +49,7 @@ const ProductFilters = ({
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
@@ -64,7 +64,7 @@ const ProductFilters = ({
               <SelectValue placeholder="Size" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Sizes</SelectItem>
+              <SelectItem value="all">All Sizes</SelectItem>
               {sizes.map((size) => (
                 <SelectItem key={size} value={size}>
                   {size}
@@ -79,7 +79,7 @@ const ProductFilters = ({
               <SelectValue placeholder="Color" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Colors</SelectItem>
+              <SelectItem value="all">All Colors</SelectItem>
               {colors.map((color) => (
                 <SelectItem key={color} value={color}>
                   {color}

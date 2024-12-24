@@ -17,6 +17,7 @@ import {
 import { Product } from "@/types/inventory";
 import StockBadge from "./table/StockBadge";
 import ProductActions from "./table/ProductActions";
+import { Button } from "@/components/ui/button";
 
 interface ProductTableProps {
   products: Product[];
@@ -80,26 +81,38 @@ const ProductTable = ({
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious 
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-            />
+              className="cursor-pointer"
+            >
+              <PaginationPrevious className="h-4 w-4" />
+            </Button>
           </PaginationItem>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <PaginationItem key={page}>
-              <PaginationLink
+              <Button
+                variant={currentPage === page ? "default" : "outline"}
+                size="icon"
                 onClick={() => onPageChange(page)}
-                isActive={currentPage === page}
+                className="cursor-pointer"
               >
                 {page}
-              </PaginationLink>
+              </Button>
             </PaginationItem>
           ))}
           <PaginationItem>
-            <PaginationNext
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-            />
+              className="cursor-pointer"
+            >
+              <PaginationNext className="h-4 w-4" />
+            </Button>
           </PaginationItem>
         </PaginationContent>
       </Pagination>

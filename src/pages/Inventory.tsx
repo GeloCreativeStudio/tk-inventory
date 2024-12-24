@@ -44,9 +44,9 @@ const Inventory = () => {
       const matchesSearch = product.name
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      const matchesCategory = !selectedCategory || product.category === selectedCategory;
-      const matchesSize = !selectedSize || product.size === selectedSize;
-      const matchesColor = !selectedColor || product.color === selectedColor;
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      const matchesSize = selectedSize === "all" || product.size === selectedSize;
+      const matchesColor = selectedColor === "all" || product.color === selectedColor;
 
       return matchesSearch && matchesCategory && matchesSize && matchesColor;
     });
