@@ -12,16 +12,18 @@ const ProductActions = ({ product, onEdit, onDelete }: ProductActionsProps) => {
   return (
     <div className="space-x-2">
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         onClick={() => onEdit(product)}
+        className="h-8 w-8 text-slate-600 hover:text-slate-900"
       >
         <Pencil className="h-4 w-4" />
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         onClick={() => onDelete(product)}
+        className="h-8 w-8 text-slate-600 hover:text-red-600"
       >
         <Trash2 className="h-4 w-4" />
       </Button>

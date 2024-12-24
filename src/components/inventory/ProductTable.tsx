@@ -42,30 +42,30 @@ const ProductTable = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
+    <div className="space-y-6">
+      <div className="rounded-md border bg-white shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Size</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead>Actions</TableHead>
+            <TableRow className="bg-slate-50">
+              <TableHead className="font-semibold">Name</TableHead>
+              <TableHead className="font-semibold">Category</TableHead>
+              <TableHead className="font-semibold">Price</TableHead>
+              <TableHead className="font-semibold">Stock</TableHead>
+              <TableHead className="font-semibold">Size</TableHead>
+              <TableHead className="font-semibold">Color</TableHead>
+              <TableHead className="font-semibold text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <TableRow key={product.id}>
+              <TableRow key={product.id} className="hover:bg-slate-50/50">
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
-                <TableCell>${formatPrice(product.price)}</TableCell>
+                <TableCell className="text-primary">${formatPrice(product.price)}</TableCell>
                 <TableCell><StockBadge stock={product.stock} /></TableCell>
                 <TableCell>{product.size}</TableCell>
                 <TableCell>{product.color}</TableCell>
-                <TableCell>
+                <TableCell className="text-right">
                   <ProductActions 
                     product={product}
                     onEdit={onEdit}
@@ -78,7 +78,7 @@ const ProductTable = ({
         </Table>
       </div>
       
-      <Pagination>
+      <Pagination className="justify-center">
         <PaginationContent>
           <PaginationItem>
             <Button
@@ -97,7 +97,7 @@ const ProductTable = ({
                 variant={currentPage === page ? "default" : "outline"}
                 size="icon"
                 onClick={() => onPageChange(page)}
-                className="cursor-pointer"
+                className="cursor-pointer w-10"
               >
                 {page}
               </Button>
