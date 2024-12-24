@@ -25,18 +25,15 @@ import ProductForm from "@/components/inventory/ProductForm";
 import ProductFilters from "@/components/inventory/ProductFilters";
 import { Product } from "@/types/inventory";
 
-const ITEMS_PER_PAGE = 10;
-
 const Inventory = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSize, setSelectedSize] = useState("all");
+  const [selectedColor, setSelectedColor] = useState("all");
   const { toast } = useToast();
 
   const filteredProducts = useMemo(() => {
@@ -51,13 +48,6 @@ const Inventory = () => {
       return matchesSearch && matchesCategory && matchesSize && matchesColor;
     });
   }, [products, searchQuery, selectedCategory, selectedSize, selectedColor]);
-
-  const paginatedProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredProducts, currentPage]);
-
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
   const handleAddProduct = (data: Partial<Product>) => {
     const newProduct: Product = {
@@ -103,10 +93,6 @@ const Inventory = () => {
     });
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
     <Layout>
       <div className="space-y-8">
@@ -144,12 +130,9 @@ const Inventory = () => {
         />
 
         <ProductTable
-          products={paginatedProducts}
+          products={filteredProducts}
           onEdit={setEditProduct}
           onDelete={setDeleteProduct}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
         />
 
         {/* Edit Dialog */}
