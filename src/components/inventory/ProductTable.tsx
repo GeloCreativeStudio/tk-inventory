@@ -6,10 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
 import { Product } from "@/types/inventory";
+import StockBadge from "./table/StockBadge";
+import ProductActions from "./table/ProductActions";
 
 interface ProductTableProps {
   products: Product[];
@@ -18,29 +17,7 @@ interface ProductTableProps {
 }
 
 const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) => {
-  const getStockStatus = (stock: number) => {
-    if (stock <= 5) return "critical";
-    if (stock <= 10) return "warning";
-    return "normal";
-  };
-
-  const getStockBadge = (stock: number) => {
-    const status = getStockStatus(stock);
-    const variants = {
-      critical: "destructive",
-      warning: "warning",
-      normal: "secondary",
-    } as const;
-
-    return (
-      <Badge variant={variants[status]}>
-        {stock} in stock
-      </Badge>
-    );
-  };
-
   const formatPrice = (price: number) => {
-    // Ensure price is a number and format it
     const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
     return !isNaN(numericPrice) ? numericPrice.toFixed(2) : '0.00';
   };
@@ -65,24 +42,15 @@ const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) => {
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>{product.category}</TableCell>
               <TableCell>${formatPrice(product.price)}</TableCell>
-              <TableCell>{getStockBadge(product.stock)}</TableCell>
+              <TableCell><StockBadge stock={product.stock} /></TableCell>
               <TableCell>{product.size}</TableCell>
               <TableCell>{product.color}</TableCell>
-              <TableCell className="space-x-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => onEdit(product)}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => onDelete(product)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+              <TableCell>
+                <ProductActions 
+                  product={product}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
               </TableCell>
             </TableRow>
           ))}
