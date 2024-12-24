@@ -1,7 +1,9 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Product } from "@/types/inventory";
+import { productSchema, ProductFormValues } from "@/lib/validations/product";
 import ProductNameField from "./form-fields/ProductNameField";
 import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
@@ -16,7 +18,8 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
-  const form = useForm<Partial<Product>>({
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
     defaultValues: initialData || {
       name: "",
       category: "",
@@ -27,13 +30,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
     },
   });
 
-  const handleSubmit = (data: Partial<Product>) => {
-    const formattedData = {
-      ...data,
-      price: Number(data.price),
-      stock: Number(data.stock),
-    };
-    onSubmit(formattedData);
+  const handleSubmit = (data: ProductFormValues) => {
+    onSubmit(data);
   };
 
   return (

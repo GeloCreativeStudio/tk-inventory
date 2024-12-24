@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -22,14 +22,42 @@ import {
 } from "@/components/ui/alert-dialog";
 import ProductTable from "@/components/inventory/ProductTable";
 import ProductForm from "@/components/inventory/ProductForm";
+import ProductFilters from "@/components/inventory/ProductFilters";
 import { Product } from "@/types/inventory";
+
+const ITEMS_PER_PAGE = 10;
 
 const Inventory = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const { toast } = useToast();
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory = !selectedCategory || product.category === selectedCategory;
+      const matchesSize = !selectedSize || product.size === selectedSize;
+      const matchesColor = !selectedColor || product.color === selectedColor;
+
+      return matchesSearch && matchesCategory && matchesSize && matchesColor;
+    });
+  }, [products, searchQuery, selectedCategory, selectedSize, selectedColor]);
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
   const handleAddProduct = (data: Partial<Product>) => {
     const newProduct: Product = {
@@ -75,6 +103,10 @@ const Inventory = () => {
     });
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <Layout>
       <div className="space-y-8">
@@ -100,10 +132,24 @@ const Inventory = () => {
           </Dialog>
         </div>
 
+        <ProductFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          selectedSize={selectedSize}
+          onSizeChange={setSelectedSize}
+          selectedColor={selectedColor}
+          onColorChange={setSelectedColor}
+        />
+
         <ProductTable
-          products={products}
+          products={paginatedProducts}
           onEdit={setEditProduct}
           onDelete={setDeleteProduct}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
 
         {/* Edit Dialog */}
