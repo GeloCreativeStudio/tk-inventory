@@ -10,7 +10,6 @@ import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductStockField from "./form-fields/ProductStockField";
 import ProductSizeField from "./form-fields/ProductSizeField";
 import ProductColorField from "./form-fields/ProductColorField";
-import ProductSkuField from "./form-fields/ProductSkuField";
 import ProductImageField from "./form-fields/ProductImageField";
 
 interface ProductFormProps {
@@ -20,6 +19,13 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
+  const generateSKU = (name: string, category: string) => {
+    const timestamp = Date.now().toString().slice(-4);
+    const namePrefix = name.slice(0, 3).toUpperCase();
+    const categoryPrefix = category.slice(0, 2).toUpperCase();
+    return `${namePrefix}-${categoryPrefix}${timestamp}`;
+  };
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: initialData || {
@@ -35,7 +41,12 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    onSubmit(data);
+    if (mode === "create") {
+      const sku = generateSKU(data.name, data.category);
+      onSubmit({ ...data, sku });
+    } else {
+      onSubmit(data);
+    }
   };
 
   return (
@@ -43,7 +54,6 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <ProductNameField form={form} />
         <ProductCategoryField form={form} />
-        <ProductSkuField form={form} />
         
         <div className="grid grid-cols-2 gap-4">
           <ProductPriceField form={form} />
