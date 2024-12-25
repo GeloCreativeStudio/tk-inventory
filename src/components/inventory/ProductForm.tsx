@@ -11,7 +11,6 @@ import ProductStockField from "./form-fields/ProductStockField";
 import ProductSizeField from "./form-fields/ProductSizeField";
 import ProductColorField from "./form-fields/ProductColorField";
 import ProductImageField from "./form-fields/ProductImageField";
-import { useState } from "react";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -20,8 +19,6 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const generateSKU = (name: string, category: string) => {
     const timestamp = Date.now().toString().slice(-4);
     const namePrefix = name.slice(0, 3).toUpperCase();
@@ -43,19 +40,12 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
     },
   });
 
-  const handleSubmit = async (data: ProductFormValues) => {
-    if (isSubmitting) return;
-    
-    setIsSubmitting(true);
-    try {
-      if (mode === "create") {
-        const sku = generateSKU(data.name, data.category);
-        await onSubmit({ ...data, sku });
-      } else {
-        await onSubmit(data);
-      }
-    } finally {
-      setIsSubmitting(false);
+  const handleSubmit = (data: ProductFormValues) => {
+    if (mode === "create") {
+      const sku = generateSKU(data.name, data.category);
+      onSubmit({ ...data, sku });
+    } else {
+      onSubmit(data);
     }
   };
 
@@ -77,8 +67,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
 
         <ProductImageField form={form} />
 
-        <Button type="submit" disabled={isSubmitting} className="w-full">
-          {isSubmitting ? "Processing..." : mode === "create" ? "Add Product" : "Update Product"}
+        <Button type="submit" className="w-full">
+          {mode === "create" ? "Add Product" : "Update Product"}
         </Button>
       </form>
     </Form>
