@@ -10,6 +10,8 @@ import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductStockField from "./form-fields/ProductStockField";
 import ProductSizeField from "./form-fields/ProductSizeField";
 import ProductColorField from "./form-fields/ProductColorField";
+import ProductSkuField from "./form-fields/ProductSkuField";
+import ProductImageField from "./form-fields/ProductImageField";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -27,6 +29,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       stock: 0,
       size: "",
       color: "",
+      sku: "",
+      image: "",
     },
   });
 
@@ -39,6 +43,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <ProductNameField form={form} />
         <ProductCategoryField form={form} />
+        <ProductSkuField form={form} />
         
         <div className="grid grid-cols-2 gap-4">
           <ProductPriceField form={form} />
@@ -50,7 +55,9 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
           <ProductColorField form={form} />
         </div>
 
-        <Button type="submit">
+        <ProductImageField form={form} />
+
+        <Button type="submit" className="w-full">
           {mode === "create" ? "Add Product" : "Update Product"}
         </Button>
       </form>
