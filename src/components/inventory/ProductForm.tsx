@@ -44,14 +44,26 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   });
 
   const handleSubmit = async (data: ProductFormValues) => {
+    if (isSubmitting) return;
+    
     try {
       setIsSubmitting(true);
+      
+      // Ensure price and stock are numbers
+      const formattedData = {
+        ...data,
+        price: Number(data.price),
+        stock: Number(data.stock)
+      };
+
       if (mode === "create") {
         const sku = generateSKU(data.name, data.category);
-        await onSubmit({ ...data, sku });
+        await onSubmit({ ...formattedData, sku });
       } else {
-        await onSubmit(data);
+        await onSubmit(formattedData);
       }
+    } catch (error) {
+      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
