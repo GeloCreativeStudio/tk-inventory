@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { Product } from "@/types/inventory"
 
 export const productSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
