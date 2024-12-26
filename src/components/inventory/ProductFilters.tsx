@@ -37,7 +37,7 @@ const ProductFilters = ({
         <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search products..."
+            placeholder="Search by product name or SKU..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className="pl-9 bg-slate-50 border-slate-200"

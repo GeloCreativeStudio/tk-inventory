@@ -38,9 +38,10 @@ const Inventory = () => {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      const matchesSearch = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = 
+        product.name.toLowerCase().includes(searchLower) ||
+        (product.sku?.toLowerCase().includes(searchLower) || false);
       const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
       const matchesSize = selectedSize === "all" || product.size === selectedSize;
       const matchesColor = selectedColor === "all" || product.color === selectedColor;

@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { Product } from "@/types/inventory";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "lucide-react";
 
 interface ProductImageFieldProps {
@@ -17,6 +17,14 @@ interface ProductImageFieldProps {
 
 const ProductImageField = ({ form }: ProductImageFieldProps) => {
   const [preview, setPreview] = useState<string | null>(null);
+
+  // Update preview when form value changes
+  useEffect(() => {
+    const currentValue = form.getValues("image");
+    if (currentValue) {
+      setPreview(currentValue);
+    }
+  }, [form]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,7 +43,7 @@ const ProductImageField = ({ form }: ProductImageFieldProps) => {
     <FormField
       control={form.control}
       name="image"
-      render={({ field: { value, ...field } }) => (
+      render={({ field }) => (
         <FormItem>
           <FormLabel>Product Image</FormLabel>
           <FormControl>
@@ -44,18 +52,18 @@ const ProductImageField = ({ form }: ProductImageFieldProps) => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                {...field}
+                className="cursor-pointer"
               />
-              {(preview || value) && (
+              {(preview || field.value) && (
                 <div className="relative w-32 h-32 border rounded-md overflow-hidden">
                   <img
-                    src={preview || value}
+                    src={preview || field.value}
                     alt="Product preview"
                     className="w-full h-full object-cover"
                   />
                 </div>
               )}
-              {!preview && !value && (
+              {!preview && !field.value && (
                 <div className="w-32 h-32 border rounded-md flex items-center justify-center bg-slate-50">
                   <Image className="w-8 h-8 text-slate-300" />
                 </div>
