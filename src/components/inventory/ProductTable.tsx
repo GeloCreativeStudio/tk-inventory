@@ -10,6 +10,7 @@ import { Product } from "@/types/inventory";
 import StockBadge from "./table/StockBadge";
 import ProductActions from "./table/ProductActions";
 import { Image } from "lucide-react";
+import { formatCurrency } from "@/lib/utils/currency";
 
 interface ProductTableProps {
   products: Product[];
@@ -24,11 +25,6 @@ const ProductTable = ({
   onEdit, 
   onDelete,
 }: ProductTableProps) => {
-  const formatPrice = (price: number) => {
-    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
-    return !isNaN(numericPrice) ? numericPrice.toFixed(2) : '0.00';
-  };
-
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-x-auto">
       <Table>
@@ -66,7 +62,7 @@ const ProductTable = ({
               <TableCell className="font-mono text-sm">{product.sku || '-'}</TableCell>
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>{product.category}</TableCell>
-              <TableCell className="text-primary">${formatPrice(product.price)}</TableCell>
+              <TableCell className="text-accent font-medium">{formatCurrency(product.price)}</TableCell>
               <TableCell><StockBadge stock={product.stock} /></TableCell>
               <TableCell>{product.size}</TableCell>
               <TableCell>{product.color}</TableCell>

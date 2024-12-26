@@ -8,6 +8,7 @@ import { Product } from "@/types/inventory";
 import { Badge } from "@/components/ui/badge";
 import { Image } from "lucide-react";
 import StockBadge from "./table/StockBadge";
+import { formatCurrency } from "@/lib/utils/currency";
 
 interface ProductViewDialogProps {
   product: Product | null;
@@ -16,13 +17,6 @@ interface ProductViewDialogProps {
 
 const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   if (!product) return null;
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
-  };
 
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
@@ -57,8 +51,8 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
             </div>
 
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">
-                {formatPrice(product.price)}
+              <div className="text-3xl font-bold text-accent">
+                {formatCurrency(product.price)}
               </div>
               <StockBadge stock={product.stock} />
             </div>
