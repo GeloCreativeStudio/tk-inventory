@@ -7,6 +7,15 @@ export const productSchema = z.object({
   stock: z.number().int().min(0, "Stock must be greater than or equal to 0"),
   size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
+  sku: z.string().optional(),
+  image: z.string().optional(),
 })
 
 export type ProductFormValues = z.infer<typeof productSchema>
+
+export const generateSKU = (product: Partial<Product>): string => {
+  const category = product.category?.slice(0, 3).toUpperCase() || 'XXX';
+  const name = product.name?.slice(0, 3).toUpperCase() || 'XXX';
+  const timestamp = Date.now().toString().slice(-4);
+  return `${category}-${name}-${timestamp}`;
+};

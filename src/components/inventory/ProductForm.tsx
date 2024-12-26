@@ -3,13 +3,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Product } from "@/types/inventory";
-import { productSchema, ProductFormValues } from "@/lib/validations/product";
+import { productSchema, ProductFormValues, generateSKU } from "@/lib/validations/product";
 import ProductNameField from "./form-fields/ProductNameField";
 import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductStockField from "./form-fields/ProductStockField";
 import ProductSizeField from "./form-fields/ProductSizeField";
 import ProductColorField from "./form-fields/ProductColorField";
+import ProductImageField from "./form-fields/ProductImageField";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -27,11 +28,16 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       stock: 0,
       size: "",
       color: "",
+      image: "",
     },
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    onSubmit(data);
+    const productData = {
+      ...data,
+      sku: mode === "create" ? generateSKU(data) : initialData?.sku,
+    };
+    onSubmit(productData);
   };
 
   return (
@@ -49,6 +55,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
           <ProductSizeField form={form} />
           <ProductColorField form={form} />
         </div>
+
+        <ProductImageField form={form} />
 
         <Button type="submit">
           {mode === "create" ? "Add Product" : "Update Product"}
