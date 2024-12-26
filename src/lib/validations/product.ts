@@ -7,8 +7,6 @@ export const productSchema = z.object({
   stock: z.number().int().min(0, "Stock must be greater than or equal to 0"),
   size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
-  sku: z.string().min(1, "SKU is required"),
-  image: z.string().optional(),
 })
 
 export type ProductFormValues = z.infer<typeof productSchema>

@@ -10,8 +10,6 @@ import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductStockField from "./form-fields/ProductStockField";
 import ProductSizeField from "./form-fields/ProductSizeField";
 import ProductColorField from "./form-fields/ProductColorField";
-import ProductImageField from "./form-fields/ProductImageField";
-import { useState } from "react";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -20,15 +18,6 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const generateSKU = (name: string, category: string) => {
-    const timestamp = Date.now().toString().slice(-4);
-    const namePrefix = name.slice(0, 3).toUpperCase();
-    const categoryPrefix = category.slice(0, 2).toUpperCase();
-    return `${namePrefix}-${categoryPrefix}${timestamp}`;
-  };
-
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: initialData || {
@@ -38,40 +27,11 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       stock: 0,
       size: "",
       color: "",
-      sku: "",
-      image: "",
     },
   });
 
-  const handleSubmit = async (data: ProductFormValues) => {
-    if (isSubmitting) return;
-    
-    try {
-      setIsSubmitting(true);
-      
-      // Ensure price and stock are numbers
-      const formattedData = {
-        ...data,
-        price: Number(data.price),
-        stock: Number(data.stock)
-      };
-
-      if (mode === "create") {
-        const sku = generateSKU(data.name, data.category);
-        await onSubmit({ ...formattedData, sku });
-      } else {
-        await onSubmit(formattedData);
-      }
-
-      // Reset form after successful submission
-      if (mode === "create") {
-        form.reset();
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSubmit = (data: ProductFormValues) => {
+    onSubmit(data);
   };
 
   return (
@@ -90,19 +50,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
           <ProductColorField form={form} />
         </div>
 
-        <ProductImageField form={form} />
-
-        <Button 
-          type="submit" 
-          className="w-full"
-          disabled={isSubmitting}
-        >
-          {isSubmitting 
-            ? "Processing..." 
-            : mode === "create" 
-              ? "Add Product" 
-              : "Update Product"
-          }
+        <Button type="submit">
+          {mode === "create" ? "Add Product" : "Update Product"}
         </Button>
       </form>
     </Form>
