@@ -13,12 +13,14 @@ import { Image } from "lucide-react";
 
 interface ProductTableProps {
   products: Product[];
+  onView: (product: Product) => void;
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
 }
 
 const ProductTable = ({ 
   products, 
+  onView,
   onEdit, 
   onDelete,
 }: ProductTableProps) => {
@@ -71,6 +73,7 @@ const ProductTable = ({
               <TableCell className="text-right">
                 <ProductActions 
                   product={product}
+                  onView={onView}
                   onEdit={onEdit}
                   onDelete={onDelete}
                 />

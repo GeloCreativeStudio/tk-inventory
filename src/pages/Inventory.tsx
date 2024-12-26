@@ -23,12 +23,14 @@ import {
 import ProductTable from "@/components/inventory/ProductTable";
 import ProductForm from "@/components/inventory/ProductForm";
 import ProductFilters from "@/components/inventory/ProductFilters";
+import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import { Product } from "@/types/inventory";
 
 const Inventory = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -132,8 +134,15 @@ const Inventory = () => {
 
         <ProductTable
           products={filteredProducts}
+          onView={setViewProduct}
           onEdit={setEditProduct}
           onDelete={setDeleteProduct}
+        />
+
+        {/* View Dialog */}
+        <ProductViewDialog 
+          product={viewProduct} 
+          onClose={() => setViewProduct(null)} 
         />
 
         {/* Edit Dialog */}
