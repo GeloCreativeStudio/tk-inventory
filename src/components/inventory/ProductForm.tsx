@@ -62,6 +62,11 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       } else {
         await onSubmit(formattedData);
       }
+
+      // Reset form after successful submission
+      if (mode === "create") {
+        form.reset();
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
