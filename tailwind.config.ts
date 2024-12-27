@@ -25,23 +25,23 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#000000",
-          foreground: "#FFFFFF",
+          DEFAULT: "#000000", // Pure black from logo
+          foreground: "#FFFFFF", // Pure white from logo
         },
         secondary: {
-          DEFAULT: "#666666",
+          DEFAULT: "#1A1A1A", // Slightly lighter black for depth
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#0070F3",
+          DEFAULT: "#333333", // Dark gray for accents
           foreground: "#FFFFFF",
         },
         success: {
-          DEFAULT: "#0070F3",
+          DEFAULT: "#2B2B2B", // Dark success state
           foreground: "#FFFFFF",
         },
         warning: {
-          DEFAULT: "#F5A623",
+          DEFAULT: "#404040", // Dark warning state
           foreground: "#FFFFFF",
         },
         error: {
