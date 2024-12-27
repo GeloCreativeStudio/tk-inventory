@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -27,6 +27,7 @@ import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import { Product } from "@/types/inventory";
 
 const Inventory = () => {
+  const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -37,6 +38,8 @@ const Inventory = () => {
   const [selectedSize, setSelectedSize] = useState("all");
   const [selectedColor, setSelectedColor] = useState("all");
   const { toast } = useToast();
+
+  const isAdmin = user?.role === "admin";
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -53,6 +56,8 @@ const Inventory = () => {
   }, [products, searchQuery, selectedCategory, selectedSize, selectedColor]);
 
   const handleAddProduct = (data: Partial<Product>) => {
+    if (!isAdmin) return;
+
     const newProduct: Product = {
       id: (products.length + 1).toString(),
       ...data as Omit<Product, 'id'>,
@@ -67,7 +72,7 @@ const Inventory = () => {
   };
 
   const handleEditProduct = (data: Partial<Product>) => {
-    if (!editProduct) return;
+    if (!isAdmin || !editProduct) return;
 
     const updatedProducts = products.map((product) =>
       product.id === editProduct.id ? { ...product, ...data } : product
@@ -82,7 +87,7 @@ const Inventory = () => {
   };
 
   const handleDeleteConfirm = () => {
-    if (!deleteProduct) return;
+    if (!isAdmin || !deleteProduct) return;
 
     const filteredProducts = products.filter(
       (product) => product.id !== deleteProduct.id
@@ -97,15 +102,15 @@ const Inventory = () => {
   };
 
   return (
-    <Layout>
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Inventory</h2>
-            <p className="text-muted-foreground">
-              Manage your inventory items here.
-            </p>
-          </div>
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Inventory</h2>
+          <p className="text-muted-foreground">
+            {isAdmin ? "Manage your inventory items here." : "Browse inventory items here."}
+          </p>
+        </div>
+        {isAdmin && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -119,69 +124,70 @@ const Inventory = () => {
               <ProductForm onSubmit={handleAddProduct} />
             </DialogContent>
           </Dialog>
-        </div>
-
-        <ProductFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          selectedSize={selectedSize}
-          onSizeChange={setSelectedSize}
-          selectedColor={selectedColor}
-          onColorChange={setSelectedColor}
-        />
-
-        <ProductTable
-          products={filteredProducts}
-          onView={setViewProduct}
-          onEdit={setEditProduct}
-          onDelete={setDeleteProduct}
-        />
-
-        {/* View Dialog */}
-        <ProductViewDialog 
-          product={viewProduct} 
-          onClose={() => setViewProduct(null)} 
-        />
-
-        {/* Edit Dialog */}
-        <Dialog open={!!editProduct} onOpenChange={() => setEditProduct(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Product</DialogTitle>
-            </DialogHeader>
-            <ProductForm
-              mode="edit"
-              initialData={editProduct || undefined}
-              onSubmit={handleEditProduct}
-            />
-          </DialogContent>
-        </Dialog>
-
-        {/* Delete Confirmation Dialog */}
-        <AlertDialog
-          open={!!deleteProduct}
-          onOpenChange={() => setDeleteProduct(null)}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the
-                product from your inventory.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm}>
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        )}
       </div>
-    </Layout>
+
+      <ProductFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        selectedSize={selectedSize}
+        onSizeChange={setSelectedSize}
+        selectedColor={selectedColor}
+        onColorChange={setSelectedColor}
+      />
+
+      <ProductTable
+        products={filteredProducts}
+        onView={setViewProduct}
+        onEdit={isAdmin ? setEditProduct : undefined}
+        onDelete={isAdmin ? setDeleteProduct : undefined}
+      />
+
+      <ProductViewDialog 
+        product={viewProduct} 
+        onClose={() => setViewProduct(null)} 
+      />
+
+      {isAdmin && (
+        <>
+          <Dialog open={!!editProduct} onOpenChange={() => setEditProduct(null)}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Product</DialogTitle>
+              </DialogHeader>
+              <ProductForm
+                mode="edit"
+                initialData={editProduct || undefined}
+                onSubmit={handleEditProduct}
+              />
+            </DialogContent>
+          </Dialog>
+
+          <AlertDialog
+            open={!!deleteProduct}
+            onOpenChange={() => setDeleteProduct(null)}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  product from your inventory.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteConfirm}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      )}
+    </div>
   );
 };
 

@@ -32,7 +32,7 @@ const App = () => (
             <Route
               path="/inventory"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Inventory />
                 </ProtectedRoute>
               }
