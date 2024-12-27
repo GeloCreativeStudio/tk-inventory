@@ -15,8 +15,8 @@ import { formatCurrency } from "@/lib/utils/currency";
 interface ProductTableProps {
   products: Product[];
   onView: (product: Product) => void;
-  onEdit?: (product: Product) => void;
-  onDelete?: (product: Product) => void;
+  onEdit: (product: Product) => void;
+  onDelete: (product: Product) => void;
 }
 
 const ProductTable = ({ 
