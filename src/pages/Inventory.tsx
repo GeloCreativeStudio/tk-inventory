@@ -26,9 +26,35 @@ import ProductFilters from "@/components/inventory/ProductFilters";
 import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import { Product } from "@/types/inventory";
 
+// Test products data
+const testProducts: Product[] = [
+  {
+    id: "test-1",
+    name: "Tatung Kalye",
+    category: "Clothing",
+    price: 999.00,
+    stock: Math.floor(Math.random() * 20) + 1, // Random stock between 1-20
+    size: ["S", "M", "L", "XL"][Math.floor(Math.random() * 4)], // Random size
+    color: "Black",
+    sku: "CLO-TAT-BLK",
+    image: "/img_test/001BLACK.jpg"
+  },
+  {
+    id: "test-2",
+    name: "Tatung Kalye",
+    category: "Clothing",
+    price: 999.00,
+    stock: Math.floor(Math.random() * 20) + 1, // Random stock between 1-20
+    size: ["S", "M", "L", "XL"][Math.floor(Math.random() * 4)], // Random size
+    color: "White",
+    sku: "CLO-TAT-WHT",
+    image: "/img_test/001WHITE.jpg"
+  }
+];
+
 const Inventory = () => {
   const { user } = useAuth();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(testProducts); // Initialize with test products
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
