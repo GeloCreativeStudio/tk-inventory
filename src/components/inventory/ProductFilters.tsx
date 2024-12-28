@@ -7,8 +7,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { categories, sizes, colors } from "@/lib/constants";
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface ProductFiltersProps {
   searchQuery: string;
@@ -31,13 +33,64 @@ const ProductFilters = ({
   selectedColor,
   onColorChange,
 }: ProductFiltersProps) => {
+  const hasActiveFilters = searchQuery || 
+    selectedCategory !== "all" || 
+    selectedSize !== "all" || 
+    selectedColor !== "all";
+
+  const clearAllFilters = () => {
+    onSearchChange("");
+    onCategoryChange("all");
+    onSizeChange("all");
+    onColorChange("all");
+  };
+
   return (
     <Card className="bg-white border-slate-200 shadow-sm">
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-semibold text-slate-900">Filters</CardTitle>
-        <CardDescription className="text-sm text-slate-500">
-          Narrow down products by using the filters below
-        </CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-lg font-semibold text-slate-900">Filters</CardTitle>
+            <CardDescription className="text-sm text-slate-500">
+              Narrow down products by using the filters below
+            </CardDescription>
+          </div>
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearAllFilters}
+              className="h-8 text-slate-600 hover:text-slate-900"
+            >
+              <RefreshCw className="mr-2 h-3 w-3" />
+              Clear Filters
+            </Button>
+          )}
+        </div>
+        {hasActiveFilters && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {searchQuery && (
+              <Badge variant="secondary" className="text-xs">
+                Search: {searchQuery}
+              </Badge>
+            )}
+            {selectedCategory !== "all" && (
+              <Badge variant="secondary" className="text-xs">
+                Category: {selectedCategory}
+              </Badge>
+            )}
+            {selectedSize !== "all" && (
+              <Badge variant="secondary" className="text-xs">
+                Size: {selectedSize}
+              </Badge>
+            )}
+            {selectedColor !== "all" && (
+              <Badge variant="secondary" className="text-xs">
+                Color: {selectedColor}
+              </Badge>
+            )}
+          </div>
+        )}
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="relative">
