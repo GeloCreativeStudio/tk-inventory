@@ -22,7 +22,7 @@ interface ProductColorFieldProps {
 }
 
 const ProductColorField = ({ form, index }: ProductColorFieldProps) => {
-  const name = index !== undefined ? `variations.${index}.color` : "color";
+  const name = index !== undefined ? `variations.${index}.color` as const : "color";
 
   return (
     <FormField

@@ -15,7 +15,7 @@ interface ProductStockFieldProps {
 }
 
 const ProductStockField = ({ form, index }: ProductStockFieldProps) => {
-  const name = index !== undefined ? `variations.${index}.stock` : "stock";
+  const name = index !== undefined ? `variations.${index}.stock` as const : "stock";
 
   return (
     <FormField

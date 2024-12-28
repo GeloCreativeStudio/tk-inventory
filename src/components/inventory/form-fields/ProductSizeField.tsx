@@ -22,7 +22,7 @@ interface ProductSizeFieldProps {
 }
 
 const ProductSizeField = ({ form, index }: ProductSizeFieldProps) => {
-  const name = index !== undefined ? `variations.${index}.size` : "size";
+  const name = index !== undefined ? `variations.${index}.size` as const : "size";
 
   return (
     <FormField
