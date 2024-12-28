@@ -17,6 +17,8 @@ export const productSchema = z.object({
   image: z.string().optional(),
 });
 
+export type ProductFormValues = z.infer<typeof productSchema>;
+
 export const generateSKU = (product: Partial<Product>): string => {
   const category = product.category?.slice(0, 3).toUpperCase() || 'XXX';
   const name = product.name?.slice(0, 3).toUpperCase() || 'XXX';

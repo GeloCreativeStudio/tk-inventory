@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { Product, ProductVariation } from "@/types/inventory";
+import { ProductFormValues } from "@/types/inventory";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -23,7 +23,7 @@ import { sizes, colors } from "@/lib/constants";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 interface ProductVariationsFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
 }
 
 const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {
