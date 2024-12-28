@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Product } from "@/types/inventory";
 import { Badge } from "@/components/ui/badge";
-import { Banknote, Box, Calendar, Image, Package2, Palette, Ruler } from "lucide-react";
+import { Package2 } from "lucide-react";
 import StockBadge from "./table/StockBadge";
 import { formatCurrency } from "@/lib/utils/currency";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -48,7 +48,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 </div>
               ) : (
                 <div className="aspect-square rounded-lg border bg-slate-50 flex items-center justify-center shadow-sm">
-                  <Image className="h-16 w-16 text-slate-300" />
+                  <span className="text-slate-300">No image</span>
                 </div>
               )}
             </div>
@@ -58,16 +58,14 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               {/* Basic Info */}
               <div>
                 <h2 className="text-2xl font-semibold text-foreground">{product.name}</h2>
-                <div className="mt-2 font-mono text-sm text-muted-foreground flex items-center gap-2">
-                  <Box className="w-4 h-4" />
+                <div className="mt-2 font-mono text-sm text-muted-foreground">
                   SKU: {product.sku || 'N/A'}
                 </div>
               </div>
 
               {/* Price and Stock */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-3xl font-bold text-primary">
-                  <Banknote className="w-6 h-6" />
+                <div className="text-3xl font-bold text-primary">
                   {formatCurrency(product.price)}
                 </div>
                 <StockBadge stock={getTotalStock(product)} />
@@ -85,8 +83,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
           <div className="px-6 pb-6">
             <Separator className="my-6" />
             <div className="space-y-4">
-              <div className="text-sm font-medium text-foreground flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+              <div className="text-sm font-medium text-foreground">
                 Available Variations
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -96,14 +93,8 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                     className="flex flex-col gap-2 p-3 rounded-lg border bg-card shadow-sm hover:bg-accent/5 transition-colors"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Ruler className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{variation.size}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Palette className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{variation.color}</span>
-                      </div>
+                      <span className="text-sm font-medium">Size: {variation.size}</span>
+                      <span className="text-sm font-medium">Color: {variation.color}</span>
                     </div>
                     <StockBadge stock={variation.stock} />
                   </div>
