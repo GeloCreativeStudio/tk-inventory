@@ -9,7 +9,7 @@ import ProductMainFields from "./form-sections/ProductMainFields";
 import ProductVariationsSection from "./form-sections/ProductVariationsSection";
 
 interface ProductFormProps {
-  onSubmit: (data: Partial<Product>) => void;
+  onSubmit: (data: Product) => void;
   initialData?: Product;
   mode?: "create" | "edit";
 }
@@ -34,11 +34,16 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    const productData = {
+    const productData: Product = {
       ...data,
-      sku: mode === "create" ? generateSKU(data) : initialData?.sku,
+      id: initialData?.id || uuidv4(),
+      sku: mode === "create" ? generateSKU(data) : initialData?.sku || "",
+      variations: data.variations.map(variation => ({
+        ...variation,
+        id: variation.id || uuidv4(),
+      })),
     };
-    onSubmit(productData as Product);
+    onSubmit(productData);
   };
 
   return (
