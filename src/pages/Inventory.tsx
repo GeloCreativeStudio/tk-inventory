@@ -9,7 +9,6 @@ import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import InventoryHeader from "@/components/inventory/InventoryHeader";
 import InventoryDialogs from "@/components/inventory/InventoryDialogs";
 import { testProducts } from "@/data/testProducts";
-import { Dialog } from "@/components/ui/dialog";
 
 const Inventory = () => {
   const [products, setProducts] = useState<Product[]>(testProducts);
@@ -19,23 +18,24 @@ const Inventory = () => {
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSize, setSelectedSize] = useState("all");
-  const [selectedColor, setSelectedColor] = useState("all");
   const { toast } = useToast();
   const { user } = useAuth();
 
   const isAdmin = user?.role === 'admin';
 
-  // Filter products based on search query
+  // Filter products based on search query and category
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const searchMatch = searchQuery.trim() === "" || 
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (product.sku && product.sku.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      return searchMatch;
+      const categoryMatch = selectedCategory === "all" || 
+        product.category.toLowerCase() === selectedCategory.toLowerCase();
+
+      return searchMatch && categoryMatch;
     });
-  }, [products, searchQuery]);
+  }, [products, searchQuery, selectedCategory]);
 
   const handleAddProduct = (data: Partial<Product>) => {
     if (!isAdmin) {
@@ -47,9 +47,9 @@ const Inventory = () => {
       return;
     }
 
-    const newProduct: Product = {
+    const newProduct = {
       id: (products.length + 1).toString(),
-      ...data as Omit<Product, 'id'>,
+      ...data as Product,
     };
 
     setProducts([...products, newProduct]);
@@ -111,44 +111,42 @@ const Inventory = () => {
   return (
     <Layout>
       <div className="space-y-8">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <InventoryHeader setOpen={setOpen} />
+        <InventoryHeader setOpen={setOpen} />
 
-          <ProductFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            selectedSize={selectedSize}
-            onSizeChange={setSelectedSize}
-            selectedColor={selectedColor}
-            onColorChange={setSelectedColor}
-          />
+        <ProductFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          selectedSize="all"
+          onSizeChange={() => {}}
+          selectedColor="all"
+          onColorChange={() => {}}
+        />
 
-          <ProductTable
-            products={filteredProducts}
-            onView={setViewProduct}
-            onEdit={isAdmin ? setEditProduct : undefined}
-            onDelete={isAdmin ? setDeleteProduct : undefined}
-          />
+        <ProductTable
+          products={filteredProducts}
+          onView={setViewProduct}
+          onEdit={isAdmin ? setEditProduct : undefined}
+          onDelete={isAdmin ? setDeleteProduct : undefined}
+        />
 
-          <InventoryDialogs
-            open={open}
-            editProduct={editProduct}
-            deleteProduct={deleteProduct}
-            setOpen={setOpen}
-            setEditProduct={setEditProduct}
-            setDeleteProduct={setDeleteProduct}
-            handleAddProduct={handleAddProduct}
-            handleEditProduct={handleEditProduct}
-            handleDeleteConfirm={handleDeleteConfirm}
-          />
+        <InventoryDialogs
+          open={open}
+          editProduct={editProduct}
+          deleteProduct={deleteProduct}
+          setOpen={setOpen}
+          setEditProduct={setEditProduct}
+          setDeleteProduct={setDeleteProduct}
+          handleAddProduct={handleAddProduct}
+          handleEditProduct={handleEditProduct}
+          handleDeleteConfirm={handleDeleteConfirm}
+        />
 
-          <ProductViewDialog 
-            product={viewProduct} 
-            onClose={() => setViewProduct(null)} 
-          />
-        </Dialog>
+        <ProductViewDialog 
+          product={viewProduct} 
+          onClose={() => setViewProduct(null)} 
+        />
       </div>
     </Layout>
   );

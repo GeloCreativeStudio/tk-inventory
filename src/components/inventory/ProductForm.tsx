@@ -28,7 +28,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
           size: "",
           color: "",
           stock: 0,
-        },
+        } as const,
       ],
     },
   });
