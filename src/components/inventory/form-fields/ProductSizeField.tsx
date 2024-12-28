@@ -13,18 +13,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/lib/validations/product";
 import { sizes } from "@/lib/constants";
 
 interface ProductSizeFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
+  index?: number;
 }
 
-const ProductSizeField = ({ form }: ProductSizeFieldProps) => {
+const ProductSizeField = ({ form, index }: ProductSizeFieldProps) => {
+  const name = index !== undefined ? `variations.${index}.size` : "size";
+
   return (
     <FormField
       control={form.control}
-      name="size"
+      name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Size</FormLabel>
