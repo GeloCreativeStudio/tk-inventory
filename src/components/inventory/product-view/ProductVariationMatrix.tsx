@@ -51,20 +51,40 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
           <Table>
             <TableHeader className="sticky top-0 bg-background border-b">
               <TableRow className="hover:bg-background/0">
-                <TableHead className="h-12 px-4 text-left align-middle font-medium bg-muted/50">
-                  Size / Color
+                <TableHead 
+                  className="h-12 px-4 text-left align-middle font-medium bg-muted/50 min-w-[120px]"
+                >
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">Size</span>
+                    <span className="text-xs text-muted-foreground mt-1">↓</span>
+                  </div>
                 </TableHead>
+                <TableHead 
+                  colSpan={colors.length} 
+                  className="h-12 px-4 text-center align-middle font-medium bg-muted/50 border-x"
+                >
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-medium">Color →</span>
+                  </div>
+                </TableHead>
+                <TableHead className="h-12 px-4 text-center align-middle font-medium bg-muted/50 min-w-[100px]">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">Total</span>
+                    <span className="text-xs text-muted-foreground mt-1">Stock</span>
+                  </div>
+                </TableHead>
+              </TableRow>
+              <TableRow className="hover:bg-background/0">
+                <TableHead className="h-12 px-4 text-left align-middle font-medium bg-muted/50 border-r" />
                 {colors.map(color => (
                   <TableHead 
                     key={color}
-                    className="h-12 px-4 text-center align-middle font-medium bg-muted/50"
+                    className="h-12 px-4 text-center align-middle font-medium bg-muted/50 border-r min-w-[100px]"
                   >
                     {color}
                   </TableHead>
                 ))}
-                <TableHead className="h-12 px-4 text-center align-middle font-medium bg-muted/50">
-                  Total
-                </TableHead>
+                <TableHead className="h-12 px-4 text-center align-middle font-medium bg-muted/50" />
               </TableRow>
             </TableHeader>
             <TableBody>
