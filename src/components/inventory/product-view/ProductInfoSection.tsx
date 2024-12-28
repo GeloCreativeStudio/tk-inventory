@@ -6,9 +6,14 @@ import { Product } from "@/types/inventory";
 interface ProductInfoSectionProps {
   product: Product;
   currentStock: number;
+  hasSelectedVariation: boolean;
 }
 
-const ProductInfoSection = ({ product, currentStock }: ProductInfoSectionProps) => {
+const ProductInfoSection = ({ 
+  product, 
+  currentStock,
+  hasSelectedVariation
+}: ProductInfoSectionProps) => {
   return (
     <div className="space-y-6">
       <div>
@@ -22,7 +27,10 @@ const ProductInfoSection = ({ product, currentStock }: ProductInfoSectionProps) 
         <div className="text-3xl font-bold text-primary">
           {formatCurrency(product.price)}
         </div>
-        <StockBadge stock={currentStock} />
+        <StockBadge 
+          stock={currentStock} 
+          isVariationSelected={hasSelectedVariation}
+        />
       </div>
 
       <div className="space-y-2">

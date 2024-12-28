@@ -84,7 +84,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   if (!product) return null;
 
   // Find the selected variation based on size and color
-  const selectedVariation = product.variations.find(
+  const selectedVariation = product?.variations.find(
     v => v.size === selectedSize && v.color === selectedColor
   );
 
@@ -101,8 +101,10 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
     if (selectedVariation) {
       return selectedVariation.stock;
     }
-    return getTotalStock(product);
+    return getTotalStock(product!);
   };
+
+  if (!product) return null;
 
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
@@ -130,6 +132,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               <ProductInfoSection
                 product={product}
                 currentStock={getCurrentStock()}
+                hasSelectedVariation={!!selectedVariation}
               />
             </div>
             

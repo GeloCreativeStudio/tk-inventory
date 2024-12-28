@@ -3,9 +3,10 @@ import { cn } from "@/lib/utils";
 
 interface StockBadgeProps {
   stock: number;
+  isVariationSelected?: boolean;
 }
 
-const StockBadge = ({ stock }: StockBadgeProps) => {
+const StockBadge = ({ stock, isVariationSelected }: StockBadgeProps) => {
   const getStockStatus = (stock: number) => {
     if (stock <= 5) return "critical";
     if (stock <= 10) return "warning";
@@ -20,15 +21,20 @@ const StockBadge = ({ stock }: StockBadgeProps) => {
     normal: "bg-green-100 text-green-700 hover:bg-green-100",
   };
 
+  const stockText = isVariationSelected 
+    ? `${stock} in stock for selected variation`
+    : `${stock} total in stock`;
+
   return (
     <Badge 
       variant="secondary"
       className={cn(
-        "font-medium",
-        badgeStyles[status]
+        "font-medium transition-all duration-200",
+        badgeStyles[status],
+        isVariationSelected && "ring-2 ring-primary ring-offset-2"
       )}
     >
-      {stock} in stock
+      {stockText}
     </Badge>
   );
 };
