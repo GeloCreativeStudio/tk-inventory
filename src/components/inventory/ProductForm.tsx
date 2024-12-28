@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Product } from "@/types/inventory";
+import { Product, ProductVariation } from "@/types/inventory";
 import { productSchema, ProductFormValues, generateSKU } from "@/lib/validations/product";
 import { v4 as uuidv4 } from "uuid";
 import ProductNameField from "./form-fields/ProductNameField";
