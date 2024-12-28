@@ -26,7 +26,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       price: initialData?.price || 0,
       variations: initialData?.variations || [],
       image: initialData?.image || "",
-      sku: initialData?.sku,
+      sku: initialData?.sku || "",
     },
   });
 
@@ -44,37 +44,46 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column - Product Details */}
           <div className="space-y-6">
             <Card>
               <CardContent className="pt-6">
                 <div className="space-y-6">
+                  <h3 className="text-lg font-semibold mb-4">Product Details</h3>
                   <ProductNameField form={form} />
                   <ProductCategoryField form={form} />
                   <ProductPriceField form={form} />
                 </div>
               </CardContent>
             </Card>
-          </div>
-          
-          <div className="space-y-6">
+
             <Card>
               <CardContent className="pt-6">
-                <ProductImageField form={form} />
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold mb-4">Product Variations</h3>
+                  <ProductVariationsField form={form} />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column - Product Image */}
+          <div>
+            <Card className="h-full">
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold mb-4">Product Image</h3>
+                  <ProductImageField form={form} />
+                </div>
               </CardContent>
             </Card>
           </div>
         </div>
-        
-        <Card>
-          <CardContent className="pt-6">
-            <ProductVariationsField form={form} />
-          </CardContent>
-        </Card>
 
-        <div className="flex justify-end">
-          <Button type="submit" size="lg" className="w-full md:w-auto">
+        <div className="flex justify-end mt-6">
+          <Button type="submit" size="lg">
             {mode === "create" ? "Add Product" : "Update Product"}
           </Button>
         </div>
