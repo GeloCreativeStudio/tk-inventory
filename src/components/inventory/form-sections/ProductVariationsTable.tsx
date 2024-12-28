@@ -15,7 +15,7 @@ const ProductVariationsTable = ({
   onEdit, 
   onDelete 
 }: ProductVariationsTableProps) => {
-  const hasVariations = variations.length > 0 && variations[0].size !== "";
+  const hasVariations = variations && variations.length > 0;
 
   return (
     <div className="border rounded-lg overflow-hidden">
@@ -42,12 +42,12 @@ const ProductVariationsTable = ({
           <TableBody>
             {variations.map((variation, index) => (
               <TableRow key={variation.id}>
-                <TableCell>{variation.size}</TableCell>
-                <TableCell>{variation.color}</TableCell>
+                <TableCell>{variation.size || '-'}</TableCell>
+                <TableCell>{variation.color || '-'}</TableCell>
                 <TableCell>
                   <StockBadge stock={variation.stock} />
                 </TableCell>
-                <TableCell>{variation.images.length} images</TableCell>
+                <TableCell>{variation.images?.length || 0} images</TableCell>
                 <TableCell className="text-right space-x-2">
                   <Button
                     type="button"
