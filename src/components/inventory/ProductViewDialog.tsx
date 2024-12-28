@@ -124,6 +124,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 images={currentImages}
                 currentImageIndex={currentImageIndex}
                 setCurrentImageIndex={setCurrentImageIndex}
+                hasSelectedVariation={!!selectedVariation}
               />
               
               <ProductInfoSection

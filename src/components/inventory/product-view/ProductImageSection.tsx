@@ -5,12 +5,14 @@ interface ProductImageSectionProps {
   images: string[];
   currentImageIndex: number;
   setCurrentImageIndex: (index: number) => void;
+  hasSelectedVariation?: boolean;
 }
 
 const ProductImageSection = ({
   images,
   currentImageIndex,
   setCurrentImageIndex,
+  hasSelectedVariation = false,
 }: ProductImageSectionProps) => {
   const nextImage = () => {
     setCurrentImageIndex(currentImageIndex === images.length - 1 ? 0 : currentImageIndex + 1);
@@ -52,8 +54,12 @@ const ProductImageSection = ({
             )}
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-slate-300">No images available</span>
+          <div className="w-full h-full flex items-center justify-center flex-col gap-2 p-4 text-center">
+            <span className="text-slate-400">
+              {!hasSelectedVariation 
+                ? "Select a size and color to view available images"
+                : "No images available for this variation"}
+            </span>
           </div>
         )}
       </div>
