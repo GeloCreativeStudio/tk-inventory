@@ -19,7 +19,7 @@ export const productSchema = z.object({
 
 export type ProductFormValues = z.infer<typeof productSchema>;
 
-export const generateSKU = (product: Partial<ProductFormValues>): string => {
+export const generateSKU = (product: ProductFormValues): string => {
   const category = product.category?.slice(0, 3).toUpperCase() || 'XXX';
   const name = product.name?.slice(0, 3).toUpperCase() || 'XXX';
   const timestamp = Date.now().toString().slice(-4);

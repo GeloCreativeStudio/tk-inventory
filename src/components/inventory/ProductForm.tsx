@@ -38,15 +38,15 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       ...data,
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
-    onSubmit(productData);
+    onSubmit(productData as Product);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <ProductMainFields form={form} />
         <ProductVariationsSection form={form} />
-        <Button type="submit">
+        <Button type="submit" className="w-full">
           {mode === "create" ? "Add Product" : "Update Product"}
         </Button>
       </form>

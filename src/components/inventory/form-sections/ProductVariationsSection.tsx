@@ -36,9 +36,9 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Product Variations</h3>
+        <h3 className="text-lg font-semibold text-foreground">Product Variations</h3>
         <Button
           type="button"
           variant="outline"
@@ -51,30 +51,34 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         </Button>
       </div>
 
-      {form.watch("variations")?.map((variation, index) => (
-        <div
-          key={variation.id}
-          className="space-y-4 rounded-lg border p-4 relative"
-        >
-          {form.watch("variations")?.length > 1 && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-2 top-2 h-8 w-8 text-slate-600 hover:text-red-600"
-              onClick={() => removeVariation(index)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          )}
+      <div className="space-y-4">
+        {form.watch("variations")?.map((variation, index) => (
+          <div
+            key={variation.id}
+            className="rounded-lg border bg-card p-4 shadow-sm relative"
+          >
+            {form.watch("variations")?.length > 1 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-2 h-8 w-8 text-muted-foreground hover:text-destructive"
+                onClick={() => removeVariation(index)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <ProductSizeField form={form} index={index} />
-            <ProductColorField form={form} index={index} />
+            <div className="grid gap-6">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <ProductSizeField form={form} index={index} />
+                <ProductColorField form={form} index={index} />
+              </div>
+              <ProductStockField form={form} index={index} />
+            </div>
           </div>
-          <ProductStockField form={form} index={index} />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
