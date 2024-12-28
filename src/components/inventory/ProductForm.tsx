@@ -18,6 +18,13 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
+  const defaultVariation: ProductVariation = {
+    id: uuidv4(),
+    size: "",
+    color: "",
+    stock: 0,
+  };
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -25,12 +32,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       category: initialData?.category || "",
       price: initialData?.price || 0,
       image: initialData?.image || "",
-      variations: initialData?.variations || [{
-        id: uuidv4(),
-        size: "",
-        color: "",
-        stock: 0,
-      }],
+      variations: initialData?.variations || [defaultVariation],
     },
   });
 
