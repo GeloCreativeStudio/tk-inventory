@@ -17,8 +17,10 @@ interface ProductImageFieldProps {
 }
 
 const ProductImageField = ({ form, index }: ProductImageFieldProps) => {
-  const [preview, setPreview] = useState<string | null>(null);
-  const fieldName = index !== undefined ? `variations.${index}.images.0` : 'variations.0.images.0';
+  const [preview, setPreview] = useState<string>("");
+  const fieldName = index !== undefined 
+    ? `variations.${index}.images.0` as const
+    : `variations.0.images.0` as const;
 
   // Update preview when form value changes
   useEffect(() => {

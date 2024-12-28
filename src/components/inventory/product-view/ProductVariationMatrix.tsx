@@ -76,7 +76,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                 <TableRow 
                   key={size}
                   className={cn(
-                    "transition-colors",
+                    "transition-colors hover:bg-muted/5",
                     index % 2 === 0 ? "bg-background" : "bg-muted/30"
                   )}
                 >
@@ -86,7 +86,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     return (
                       <TableCell 
                         key={`${size}-${color}`}
-                        className="text-center border-r"
+                        className="text-center border-r p-2"
                       >
                         {stock !== null ? (
                           <div className="flex justify-center">
@@ -98,22 +98,22 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                       </TableCell>
                     );
                   })}
-                  <TableCell className="text-center font-medium bg-muted/20">
+                  <TableCell className="text-center font-medium bg-muted/20 p-2">
                     {rowTotals.get(size)}
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-muted/10 font-medium">
+              <TableRow className="bg-muted/10 font-medium hover:bg-muted/20">
                 <TableCell className="border-r">Total</TableCell>
                 {colors.map(color => (
                   <TableCell 
                     key={color}
-                    className="text-center border-r"
+                    className="text-center border-r p-2"
                   >
                     {columnTotals.get(color)}
                   </TableCell>
                 ))}
-                <TableCell className="text-center bg-muted/30 font-semibold">
+                <TableCell className="text-center bg-muted/30 font-semibold p-2">
                   {overallTotal}
                 </TableCell>
               </TableRow>
