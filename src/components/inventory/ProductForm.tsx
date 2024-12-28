@@ -45,8 +45,10 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       sku: mode === "create" ? generateSKU(data) : initialData?.sku || "",
       image: data.image,
       variations: data.variations.map(variation => ({
-        ...variation,
         id: variation.id || uuidv4(),
+        size: variation.size,
+        color: variation.color,
+        stock: variation.stock,
       })),
     };
     onSubmit(productData);
