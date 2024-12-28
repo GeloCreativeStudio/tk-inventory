@@ -43,7 +43,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Variation Availability Matrix</h3>
-        <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+        <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
           Total Stock: {overallTotal}
         </Badge>
       </div>
@@ -67,7 +67,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     {color}
                   </TableHead>
                 ))}
-                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-muted/70">
+                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-secondary text-secondary-foreground">
                   Total
                 </TableHead>
               </TableRow>
@@ -99,17 +99,17 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                       </TableCell>
                     );
                   })}
-                  <TableCell className="text-center p-2">
+                  <TableCell className="text-center p-2 bg-secondary/10">
                     <Badge 
-                      variant="secondary" 
-                      className="bg-muted/20 hover:bg-muted/30 font-medium"
+                      variant="secondary"
+                      className="bg-secondary hover:bg-secondary/90"
                     >
                       {rowTotals.get(size)}
                     </Badge>
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-primary/5 font-medium hover:bg-primary/10">
+              <TableRow className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
                 <TableCell className="border-r font-semibold">Total</TableCell>
                 {colors.map(color => (
                   <TableCell 
@@ -117,17 +117,17 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     className="text-center border-r p-2"
                   >
                     <Badge 
-                      variant="secondary" 
-                      className="bg-primary/10 hover:bg-primary/20 font-semibold"
+                      variant="secondary"
+                      className="bg-secondary-foreground/10 text-secondary-foreground hover:bg-secondary-foreground/20"
                     >
                       {columnTotals.get(color)}
                     </Badge>
                   </TableCell>
                 ))}
-                <TableCell className="text-center bg-primary/20 p-2">
+                <TableCell className="text-center bg-accent p-2">
                   <Badge 
-                    variant="secondary" 
-                    className="bg-primary/30 hover:bg-primary/40 font-semibold"
+                    variant="secondary"
+                    className="bg-accent-foreground/20 text-accent-foreground hover:bg-accent-foreground/30"
                   >
                     {overallTotal}
                   </Badge>
