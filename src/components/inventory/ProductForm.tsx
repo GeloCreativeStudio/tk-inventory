@@ -20,25 +20,32 @@ interface ProductFormProps {
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: initialData || {
-      name: "",
-      category: "",
-      price: 0,
-      variations: [{
+    defaultValues: {
+      name: initialData?.name || "",
+      category: initialData?.category || "",
+      price: initialData?.price || 0,
+      image: initialData?.image || "",
+      variations: initialData?.variations || [{
         id: uuidv4(),
         size: "",
         color: "",
         stock: 0,
       }],
-      image: "",
     },
   });
 
   const handleSubmit = (data: ProductFormValues) => {
     const productData: Product = {
-      ...data,
       id: initialData?.id || uuidv4(),
+      name: data.name,
+      category: data.category,
+      price: data.price,
       sku: mode === "create" ? generateSKU(data) : initialData?.sku || "",
+      image: data.image,
+      variations: data.variations.map(variation => ({
+        ...variation,
+        id: variation.id || uuidv4(),
+      })),
     };
     onSubmit(productData);
   };
