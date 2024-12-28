@@ -32,6 +32,13 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   // Update available colors when size changes
   const handleSizeSelect = (size: string) => {
     if (!product) return;
+    // If clicking the already selected size, deselect it
+    if (size === selectedSize) {
+      setSelectedSize("");
+      setAvailableColors(colors); // Reset available colors to all colors
+      return;
+    }
+    
     setSelectedSize(size);
     const colorsForSize = product.variations
       .filter(v => v.size === size)
@@ -47,6 +54,13 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   // Update available sizes when color changes
   const handleColorSelect = (color: string) => {
     if (!product) return;
+    // If clicking the already selected color, deselect it
+    if (color === selectedColor) {
+      setSelectedColor("");
+      setAvailableSizes(sizes); // Reset available sizes to all sizes
+      return;
+    }
+    
     setSelectedColor(color);
     const sizesForColor = product.variations
       .filter(v => v.color === color)
