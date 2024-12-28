@@ -11,13 +11,16 @@ interface ProductMainFieldsProps {
 
 const ProductMainFields = ({ form }: ProductMainFieldsProps) => {
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 sm:grid-cols-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Left Column - Form Fields */}
+      <div className="space-y-6">
         <ProductNameField form={form} />
         <ProductCategoryField form={form} />
-      </div>
-      <div className="grid gap-6 sm:grid-cols-2">
         <ProductPriceField form={form} />
+      </div>
+
+      {/* Right Column - Image Preview */}
+      <div className="h-full">
         <ProductImageField form={form} />
       </div>
     </div>
