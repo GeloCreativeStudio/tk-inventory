@@ -5,6 +5,7 @@ import { ProductFormValues } from "@/lib/validations/product";
 import ProductSizeField from "../form-fields/ProductSizeField";
 import ProductColorField from "../form-fields/ProductColorField";
 import ProductStockField from "../form-fields/ProductStockField";
+import ProductVariationImagesField from "../form-fields/ProductVariationImagesField";
 import { v4 as uuidv4 } from "uuid";
 import { Separator } from "@/components/ui/separator";
 
@@ -22,6 +23,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         size: "",
         color: "",
         stock: 0,
+        images: [],
       },
     ]);
   };
@@ -54,11 +56,11 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         </Button>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-6">
         {form.watch("variations")?.map((variation, index) => (
           <div
             key={variation.id}
-            className="relative rounded-lg border bg-card p-4 shadow-sm"
+            className="relative rounded-lg border bg-card p-6 shadow-sm"
           >
             {form.watch("variations")?.length > 1 && (
               <Button
@@ -72,10 +74,13 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
               </Button>
             )}
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              <ProductSizeField form={form} index={index} />
-              <ProductColorField form={form} index={index} />
-              <ProductStockField form={form} index={index} />
+            <div className="grid gap-6">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <ProductSizeField form={form} index={index} />
+                <ProductColorField form={form} index={index} />
+                <ProductStockField form={form} index={index} />
+              </div>
+              <ProductVariationImagesField form={form} index={index} />
             </div>
           </div>
         ))}
