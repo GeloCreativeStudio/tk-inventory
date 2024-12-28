@@ -8,7 +8,7 @@ import {
 import { Product } from "@/types/inventory";
 import { Package2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductImageSection from "./product-view/ProductImageSection";
 import ProductInfoSection from "./product-view/ProductInfoSection";
 import ProductVariationSection from "./product-view/ProductVariationSection";
@@ -22,12 +22,50 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [availableColors, setAvailableColors] = useState<string[]>([]);
+  const [availableSizes, setAvailableSizes] = useState<string[]>([]);
 
   if (!product) return null;
 
   // Get unique sizes and colors from variations
   const sizes = [...new Set(product.variations.map(v => v.size))];
   const colors = [...new Set(product.variations.map(v => v.color))];
+
+  // Update available colors when size changes
+  const handleSizeSelect = (size: string) => {
+    setSelectedSize(size);
+    const colorsForSize = product.variations
+      .filter(v => v.size === size)
+      .map(v => v.color);
+    setAvailableColors(colorsForSize);
+    
+    // Reset color if current selection is not available for new size
+    if (!colorsForSize.includes(selectedColor)) {
+      setSelectedColor("");
+    }
+  };
+
+  // Update available sizes when color changes
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+    const sizesForColor = product.variations
+      .filter(v => v.color === color)
+      .map(v => v.size);
+    setAvailableSizes(sizesForColor);
+    
+    // Reset size if current selection is not available for new color
+    if (!sizesForColor.includes(selectedSize)) {
+      setSelectedSize("");
+    }
+  };
+
+  // Initialize available variations on component mount
+  useEffect(() => {
+    if (product) {
+      setAvailableColors(colors);
+      setAvailableSizes(sizes);
+    }
+  }, [product]);
 
   // Find the selected variation based on size and color
   const selectedVariation = product.variations.find(
@@ -83,8 +121,10 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               colors={colors}
               selectedSize={selectedSize}
               selectedColor={selectedColor}
-              onSizeSelect={setSelectedSize}
-              onColorSelect={setSelectedColor}
+              onSizeSelect={handleSizeSelect}
+              onColorSelect={handleColorSelect}
+              availableColors={availableColors}
+              availableSizes={availableSizes}
             />
           </div>
         </ScrollArea>

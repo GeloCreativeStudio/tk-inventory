@@ -8,6 +8,8 @@ interface ProductVariationSectionProps {
   selectedColor: string;
   onSizeSelect: (size: string) => void;
   onColorSelect: (color: string) => void;
+  availableColors: string[];
+  availableSizes: string[];
 }
 
 const ProductVariationSection = ({
@@ -17,6 +19,8 @@ const ProductVariationSection = ({
   selectedColor,
   onSizeSelect,
   onColorSelect,
+  availableColors,
+  availableSizes,
 }: ProductVariationSectionProps) => {
   return (
     <div className="space-y-6 w-full">
@@ -32,6 +36,8 @@ const ProductVariationSection = ({
                 variant={selectedSize === size ? "default" : "outline"}
                 size="sm"
                 onClick={() => onSizeSelect(size)}
+                disabled={!availableSizes.includes(size)}
+                className={!availableSizes.includes(size) ? "opacity-50 cursor-not-allowed" : ""}
               >
                 {size}
               </Button>
@@ -48,6 +54,8 @@ const ProductVariationSection = ({
                 variant={selectedColor === color ? "default" : "outline"}
                 size="sm"
                 onClick={() => onColorSelect(color)}
+                disabled={!availableColors.includes(color)}
+                className={!availableColors.includes(color) ? "opacity-50 cursor-not-allowed" : ""}
               >
                 {color}
               </Button>
