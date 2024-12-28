@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Image } from "lucide-react";
 import StockBadge from "./table/StockBadge";
 import { formatCurrency } from "@/lib/utils/currency";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface ProductViewDialogProps {
   product: Product | null;
@@ -18,6 +17,10 @@ interface ProductViewDialogProps {
 
 const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   if (!product) return null;
+
+  const getTotalStock = (variations: Product['variations']) => {
+    return variations.reduce((total, variation) => total + variation.stock, 0);
+  };
 
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
@@ -55,6 +58,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               <div className="text-3xl font-bold text-accent">
                 {formatCurrency(product.price)}
               </div>
+              <StockBadge stock={getTotalStock(product.variations)} />
             </div>
 
             <div className="space-y-4">
@@ -62,32 +66,23 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 <div className="text-sm font-medium">Category</div>
                 <Badge variant="secondary">{product.category}</Badge>
               </div>
+
+              <div className="space-y-2">
+                <div className="text-sm font-medium">Variations</div>
+                <div className="grid gap-2">
+                  {product.variations.map((variation) => (
+                    <div key={variation.id} className="flex items-center justify-between p-2 rounded-lg border">
+                      <div className="flex gap-2">
+                        <Badge variant="outline">{variation.size}</Badge>
+                        <Badge variant="outline">{variation.color}</Badge>
+                      </div>
+                      <StockBadge stock={variation.stock} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-4">Product Variations</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Size</TableHead>
-                <TableHead>Color</TableHead>
-                <TableHead>Stock</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {product.variations.map((variation) => (
-                <TableRow key={variation.id}>
-                  <TableCell>{variation.size}</TableCell>
-                  <TableCell>{variation.color}</TableCell>
-                  <TableCell>
-                    <StockBadge stock={variation.stock} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
         </div>
       </DialogContent>
     </Dialog>

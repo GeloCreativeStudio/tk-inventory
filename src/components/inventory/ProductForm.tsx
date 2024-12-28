@@ -9,7 +9,6 @@ import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductImageField from "./form-fields/ProductImageField";
 import ProductVariationsField from "./form-fields/ProductVariationsField";
-import { v4 as uuidv4 } from "uuid";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -20,18 +19,23 @@ interface ProductFormProps {
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: initialData || {
-      name: "",
-      category: "",
-      price: 0,
-      variations: [{ id: uuidv4(), size: "", color: "", stock: 0 }],
-      image: "",
+    defaultValues: {
+      name: initialData?.name || "",
+      category: initialData?.category || "",
+      price: initialData?.price || 0,
+      variations: initialData?.variations || [],
+      image: initialData?.image || "",
+      sku: initialData?.sku,
     },
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    const productData = {
+    const productData: Partial<Product> = {
       ...data,
+      variations: data.variations.map(variation => ({
+        ...variation,
+        id: variation.id || crypto.randomUUID(),
+      })),
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
     onSubmit(productData);
@@ -45,6 +49,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
         <ProductPriceField form={form} />
         <ProductVariationsField form={form} />
         <ProductImageField form={form} />
+
         <Button type="submit">
           {mode === "create" ? "Add Product" : "Update Product"}
         </Button>

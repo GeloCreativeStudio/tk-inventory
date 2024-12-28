@@ -25,6 +25,10 @@ const ProductTable = ({
   onEdit, 
   onDelete,
 }: ProductTableProps) => {
+  const getTotalStock = (variations: Product['variations']) => {
+    return variations.reduce((total, variation) => total + variation.stock, 0);
+  };
+
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-x-auto">
       <Table>
@@ -35,9 +39,8 @@ const ProductTable = ({
             <TableHead className="font-semibold">Name</TableHead>
             <TableHead className="font-semibold">Category</TableHead>
             <TableHead className="font-semibold">Price</TableHead>
-            <TableHead className="font-semibold">Stock</TableHead>
-            <TableHead className="font-semibold">Size</TableHead>
-            <TableHead className="font-semibold">Color</TableHead>
+            <TableHead className="font-semibold">Total Stock</TableHead>
+            <TableHead className="font-semibold">Variations</TableHead>
             <TableHead className="font-semibold text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -64,10 +67,13 @@ const ProductTable = ({
               <TableCell>{product.category}</TableCell>
               <TableCell className="text-accent font-medium">{formatCurrency(product.price)}</TableCell>
               <TableCell>
-                <StockBadge stock={product.variations[0]?.stock || 0} />
+                <StockBadge stock={getTotalStock(product.variations)} />
               </TableCell>
-              <TableCell>{product.variations[0]?.size || '-'}</TableCell>
-              <TableCell>{product.variations[0]?.color || '-'}</TableCell>
+              <TableCell>
+                <div className="text-sm text-slate-600">
+                  {product.variations.length} variations
+                </div>
+              </TableCell>
               <TableCell className="text-right">
                 <ProductActions 
                   product={product}
