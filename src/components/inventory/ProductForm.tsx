@@ -44,7 +44,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       ...data,
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
-    onSubmit(productData);
+    onSubmit(productData as Partial<Product>);
   };
 
   const addVariation = () => {
