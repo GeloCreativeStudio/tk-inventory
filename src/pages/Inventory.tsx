@@ -18,12 +18,14 @@ const Inventory = () => {
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSize, setSelectedSize] = useState("all");
+  const [selectedColor, setSelectedColor] = useState("all");
   const { toast } = useToast();
   const { user } = useAuth();
 
   const isAdmin = user?.role === 'admin';
 
-  // Filter products based on search query and category
+  // Filter products based on search query, category, size, and color
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const searchMatch = searchQuery.trim() === "" || 
@@ -33,9 +35,15 @@ const Inventory = () => {
       const categoryMatch = selectedCategory === "all" || 
         product.category.toLowerCase() === selectedCategory.toLowerCase();
 
-      return searchMatch && categoryMatch;
+      const sizeMatch = selectedSize === "all" ||
+        product.variations.some(v => v.size.toLowerCase() === selectedSize.toLowerCase());
+
+      const colorMatch = selectedColor === "all" ||
+        product.variations.some(v => v.color.toLowerCase() === selectedColor.toLowerCase());
+
+      return searchMatch && categoryMatch && sizeMatch && colorMatch;
     });
-  }, [products, searchQuery, selectedCategory]);
+  }, [products, searchQuery, selectedCategory, selectedSize, selectedColor]);
 
   const handleAddProduct = (data: Partial<Product>) => {
     if (!isAdmin) {
@@ -118,10 +126,10 @@ const Inventory = () => {
           onSearchChange={setSearchQuery}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
-          selectedSize="all"
-          onSizeChange={() => {}}
-          selectedColor="all"
-          onColorChange={() => {}}
+          selectedSize={selectedSize}
+          onSizeChange={setSelectedSize}
+          selectedColor={selectedColor}
+          onColorChange={setSelectedColor}
         />
 
         <ProductTable
