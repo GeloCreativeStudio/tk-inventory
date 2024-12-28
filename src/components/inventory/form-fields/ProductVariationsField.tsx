@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/types/inventory";
+import { ProductFormValues, ProductVariation } from "@/types/inventory";
 import { Button } from "@/components/ui/button";
 import {
   Table,
