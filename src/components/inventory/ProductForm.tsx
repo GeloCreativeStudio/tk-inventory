@@ -30,7 +30,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    const productData = {
+    const productData: Partial<Product> = {
       ...data,
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
