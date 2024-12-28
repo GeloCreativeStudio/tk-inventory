@@ -10,7 +10,7 @@ export const testProducts: Product[] = [
     size: "M",
     color: "Black",
     sku: "CLO-CTS-0001",
-    image: "/img_test/001WHITE.jpg"
+    image: "public/img_test/001WHITE.jpg"
   },
   {
     id: "test-2",
@@ -21,6 +21,6 @@ export const testProducts: Product[] = [
     size: "M",
     color: "White",
     sku: "CLO-CTS-0002",
-    image: "/img_test/001BLACK.jpg"
+    image: "public/img_test/001BLACK.jpg"
   }
 ];
