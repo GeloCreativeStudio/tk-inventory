@@ -113,7 +113,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
 
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] p-0">
+      <DialogContent className="max-h-[90vh] p-0 max-w-[95vw] w-full lg:max-w-[1000px]">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <Package2 className="w-6 h-6" />

@@ -44,7 +44,7 @@ const InventoryDialogs = ({
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90vh] p-0">
+        <DialogContent className="max-h-[90vh] p-0 max-w-[95vw] w-full lg:max-w-[800px]">
           <DialogHeader className="px-6 pt-6">
             <DialogTitle>Add New Product</DialogTitle>
           </DialogHeader>
@@ -55,7 +55,7 @@ const InventoryDialogs = ({
       </Dialog>
 
       <Dialog open={!!editProduct} onOpenChange={() => setEditProduct(null)}>
-        <DialogContent className="max-h-[90vh] p-0">
+        <DialogContent className="max-h-[90vh] p-0 max-w-[95vw] w-full lg:max-w-[800px]">
           <DialogHeader className="px-6 pt-6">
             <DialogTitle>Edit Product</DialogTitle>
           </DialogHeader>
