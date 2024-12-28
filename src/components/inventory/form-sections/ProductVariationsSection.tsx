@@ -5,12 +5,17 @@ import { ProductFormValues } from "@/lib/validations/product";
 import { v4 as uuidv4 } from "uuid";
 import { Separator } from "@/components/ui/separator";
 import ProductVariationsTable from "./ProductVariationsTable";
+import ProductVariationModal from "./ProductVariationModal";
+import { useState } from "react";
 
 interface ProductVariationsSectionProps {
   form: UseFormReturn<ProductFormValues>;
 }
 
 const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(-1);
+
   const addVariation = () => {
     const currentVariations = form.getValues("variations") || [];
     form.setValue("variations", [
@@ -23,6 +28,8 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         images: [],
       },
     ]);
+    setEditingIndex(currentVariations.length);
+    setModalOpen(true);
   };
 
   const removeVariation = (index: number) => {
@@ -36,8 +43,13 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   };
 
   const editVariation = (index: number) => {
-    // This will be implemented in the next step with the modal
-    console.log("Edit variation at index:", index);
+    setEditingIndex(index);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setEditingIndex(-1);
   };
 
   return (
@@ -62,6 +74,13 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         variations={form.watch("variations") || []}
         onEdit={editVariation}
         onDelete={removeVariation}
+      />
+
+      <ProductVariationModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        form={form}
+        variationIndex={editingIndex}
       />
     </div>
   );
