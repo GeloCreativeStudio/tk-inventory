@@ -26,8 +26,9 @@ const ProductStockField = ({ form, index }: ProductStockFieldProps) => {
           <FormLabel>Stock</FormLabel>
           <FormControl>
             <Input 
-              type="number" 
+              type="number"
               {...field}
+              value={field.value || 0}
               onChange={(e) => field.onChange(e.target.valueAsNumber)}
             />
           </FormControl>
