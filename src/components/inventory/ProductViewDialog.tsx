@@ -125,7 +125,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
         </DialogHeader>
         
         <ScrollArea className="max-h-[calc(90vh-8rem)]">
-          <div className="flex flex-col gap-6 p-8">
+          <div className="flex flex-col gap-8 p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ProductImageSection
                 images={currentImages}
@@ -140,7 +140,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 hasSelectedVariation={!!selectedVariation}
               />
             </div>
-            
+
             <ProductVariationSection
               sizes={sizes}
               colors={colors}
