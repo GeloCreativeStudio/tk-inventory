@@ -9,10 +9,9 @@ import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import InventoryHeader from "@/components/inventory/InventoryHeader";
 import InventoryDialogs from "@/components/inventory/InventoryDialogs";
 import { Dialog } from "@/components/ui/dialog";
-import { mockProducts } from "@/lib/mock/inventory";
 
 const Inventory = () => {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
@@ -36,10 +35,10 @@ const Inventory = () => {
       return;
     }
 
-    const newProduct = {
+    const newProduct: Product = {
       id: (products.length + 1).toString(),
       ...data as Omit<Product, 'id'>,
-    } as Product;
+    };
 
     setProducts([...products, newProduct]);
     setOpen(false);
@@ -62,7 +61,7 @@ const Inventory = () => {
     if (!editProduct) return;
 
     const updatedProducts = products.map((product) =>
-      product.id === editProduct.id ? { ...product, ...data } as Product : product
+      product.id === editProduct.id ? { ...product, ...data } : product
     );
 
     setProducts(updatedProducts);
