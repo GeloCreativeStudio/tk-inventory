@@ -31,40 +31,45 @@ const ProductVariationModal = ({
 }: ProductVariationModalProps) => {
   const { toast } = useToast();
   const isSubmitting = form.formState.isSubmitting;
-  const hasErrors = Object.keys(form.formState.errors).length > 0;
   const isNewVariation = variationIndex === -1;
 
   const handleSave = async () => {
     const currentVariations = form.getValues("variations");
     const targetIndex = isNewVariation ? currentVariations.length - 1 : variationIndex;
+    const newVariation = currentVariations[targetIndex];
 
-    const isValid = await form.trigger([
-      `variations.${targetIndex}.size`,
-      `variations.${targetIndex}.color`,
-      `variations.${targetIndex}.stock`,
-    ]);
-
-    if (!isValid) {
+    // Validate required fields
+    if (!newVariation.size || !newVariation.color) {
       toast({
         title: "Validation Error",
-        description: "Please check all fields and try again.",
+        description: "Size and color are required fields",
         variant: "destructive",
       });
       return;
     }
 
     // Check for duplicate variations
-    const newVariation = currentVariations[targetIndex];
-    const isDuplicate = currentVariations.some((variation, index) => 
-      index !== targetIndex && 
-      variation.size === newVariation.size && 
-      variation.color === newVariation.color
+    const isDuplicate = currentVariations.some(
+      (variation, index) =>
+        index !== targetIndex &&
+        variation.size === newVariation.size &&
+        variation.color === newVariation.color
     );
 
     if (isDuplicate) {
       toast({
-        title: "Duplicate Variation",
-        description: "A variation with this size and color combination already exists.",
+        title: "Error",
+        description: "A variation with this size and color combination already exists",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Ensure stock is a valid number
+    if (typeof newVariation.stock !== 'number' || newVariation.stock < 0) {
+      toast({
+        title: "Validation Error",
+        description: "Stock must be a valid number greater than or equal to 0",
         variant: "destructive",
       });
       return;
@@ -114,7 +119,7 @@ const ProductVariationModal = ({
                 type="button"
                 className="flex-1"
                 onClick={handleSave}
-                disabled={isSubmitting || hasErrors}
+                disabled={isSubmitting}
               >
                 {isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

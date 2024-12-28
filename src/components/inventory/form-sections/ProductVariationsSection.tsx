@@ -28,35 +28,9 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
       images: [],
     };
     
-    form.setValue("variations", [...variations, newVariation], {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    
+    form.setValue("variations", [...variations, newVariation]);
     setEditingIndex(variations.length);
     setModalOpen(true);
-  };
-
-  const removeVariation = (index: number) => {
-    const currentVariations = form.getValues("variations") || [];
-    if (currentVariations.length > 1) {
-      form.setValue(
-        "variations",
-        currentVariations.filter((_, i) => i !== index),
-        { shouldValidate: true }
-      );
-      toast({
-        title: "Variation Removed",
-        description: "The product variation has been removed successfully.",
-      });
-    } else {
-      toast({
-        title: "Cannot Remove Variation",
-        description: "At least one variation is required for the product.",
-        variant: "destructive",
-      });
-    }
   };
 
   const editVariation = (index: number) => {
@@ -64,9 +38,34 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
     setModalOpen(true);
   };
 
+  const removeVariation = (index: number) => {
+    const currentVariations = form.getValues("variations");
+    if (currentVariations.length > 1) {
+      const updatedVariations = currentVariations.filter((_, i) => i !== index);
+      form.setValue("variations", updatedVariations, { shouldValidate: true });
+      toast({
+        title: "Success",
+        description: "Variation removed successfully",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "At least one variation is required",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleCloseModal = () => {
     setModalOpen(false);
     setEditingIndex(-1);
+
+    // Clean up empty variations
+    const variations = form.getValues("variations");
+    const cleanedVariations = variations.filter(v => v.size && v.color);
+    if (cleanedVariations.length !== variations.length) {
+      form.setValue("variations", cleanedVariations);
+    }
   };
 
   return (
@@ -88,7 +87,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
       </div>
 
       <ProductVariationsTable
-        variations={form.watch("variations") || []}
+        variations={form.watch("variations")}
         onEdit={editVariation}
         onDelete={removeVariation}
       />
