@@ -2,7 +2,6 @@ import { Product } from "@/types/inventory";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import StockBadge from "../table/StockBadge";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
 interface ProductVariationMatrixProps {
   product: Product;
@@ -43,9 +42,9 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Variation Availability Matrix</h3>
-        <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-          Total Stock: {overallTotal}
-        </Badge>
+        <div className="text-sm text-muted-foreground">
+          Total Stock: <span className="font-semibold text-foreground">{overallTotal}</span>
+        </div>
       </div>
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
@@ -67,7 +66,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     {color}
                   </TableHead>
                 ))}
-                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-secondary text-secondary-foreground">
+                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-muted/70">
                   Total
                 </TableHead>
               </TableRow>
@@ -99,38 +98,23 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                       </TableCell>
                     );
                   })}
-                  <TableCell className="text-center p-2 bg-secondary/10">
-                    <Badge 
-                      variant="secondary"
-                      className="bg-secondary hover:bg-secondary/90"
-                    >
-                      {rowTotals.get(size)}
-                    </Badge>
+                  <TableCell className="text-center font-medium bg-muted/20 p-2">
+                    {rowTotals.get(size)}
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                <TableCell className="border-r font-semibold">Total</TableCell>
+              <TableRow className="bg-muted/10 font-medium hover:bg-muted/20">
+                <TableCell className="border-r">Total</TableCell>
                 {colors.map(color => (
                   <TableCell 
                     key={color}
                     className="text-center border-r p-2"
                   >
-                    <Badge 
-                      variant="secondary"
-                      className="bg-secondary-foreground/10 text-secondary-foreground hover:bg-secondary-foreground/20"
-                    >
-                      {columnTotals.get(color)}
-                    </Badge>
+                    {columnTotals.get(color)}
                   </TableCell>
                 ))}
-                <TableCell className="text-center bg-accent p-2">
-                  <Badge 
-                    variant="secondary"
-                    className="bg-accent-foreground/20 text-accent-foreground hover:bg-accent-foreground/30"
-                  >
-                    {overallTotal}
-                  </Badge>
+                <TableCell className="text-center bg-muted/30 font-semibold p-2">
+                  {overallTotal}
                 </TableCell>
               </TableRow>
             </TableBody>
