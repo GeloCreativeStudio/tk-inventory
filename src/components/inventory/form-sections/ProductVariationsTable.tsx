@@ -15,18 +15,17 @@ const ProductVariationsTable = ({
   onEdit, 
   onDelete 
 }: ProductVariationsTableProps) => {
-  const hasValidVariations = variations?.some(v => v.size && v.color);
+  // Check if variations exist and have valid data
+  const hasValidVariations = variations.some(v => v.size || v.color || v.stock > 0 || v.images.length > 0);
 
   if (!hasValidVariations) {
     return (
-      <div className="border rounded-lg">
-        <div className="flex flex-col items-center justify-center p-8 text-center">
-          <div className="text-muted-foreground mb-2">
-            No variations added yet
-          </div>
-          <div className="text-sm text-muted-foreground/80 mb-4">
+      <div className="border rounded-lg p-8">
+        <div className="text-center space-y-3">
+          <p className="text-muted-foreground">No variations added yet</p>
+          <p className="text-sm text-muted-foreground">
             Add your first product variation by clicking the "Add Variation" button above
-          </div>
+          </p>
         </div>
       </div>
     );
@@ -46,36 +45,34 @@ const ProductVariationsTable = ({
         </TableHeader>
         <TableBody>
           {variations.map((variation, index) => (
-            variation.size && variation.color ? (
-              <TableRow key={variation.id}>
-                <TableCell>{variation.size}</TableCell>
-                <TableCell>{variation.color}</TableCell>
-                <TableCell>
-                  <StockBadge stock={variation.stock} />
-                </TableCell>
-                <TableCell>{variation.images?.length || 0} images</TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onEdit(index)}
-                    className="h-8 w-8 text-muted-foreground hover:text-primary"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onDelete(index)}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ) : null
+            <TableRow key={variation.id}>
+              <TableCell>{variation.size || "-"}</TableCell>
+              <TableCell>{variation.color || "-"}</TableCell>
+              <TableCell>
+                <StockBadge stock={variation.stock} />
+              </TableCell>
+              <TableCell>{variation.images.length} images</TableCell>
+              <TableCell className="text-right space-x-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onEdit(index)}
+                  className="h-8 w-8 text-muted-foreground hover:text-primary"
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDelete(index)}
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>

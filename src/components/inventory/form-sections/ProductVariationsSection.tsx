@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import ProductVariationsTable from "./ProductVariationsTable";
 import ProductVariationModal from "./ProductVariationModal";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
 
 interface ProductVariationsSectionProps {
   form: UseFormReturn<ProductFormValues>;
@@ -16,25 +15,20 @@ interface ProductVariationsSectionProps {
 const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
-  const { toast } = useToast();
 
   const addVariation = () => {
-    const variations = form.getValues("variations") || [];
-    const newVariation = {
-      id: uuidv4(),
-      size: "",
-      color: "",
-      stock: 0,
-      images: [],
-    };
-    
-    form.setValue("variations", [...variations, newVariation], {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    
-    setEditingIndex(variations.length);
+    const currentVariations = form.getValues("variations") || [];
+    form.setValue("variations", [
+      ...currentVariations,
+      {
+        id: uuidv4(),
+        size: "",
+        color: "",
+        stock: 0,
+        images: [],
+      },
+    ]);
+    setEditingIndex(currentVariations.length);
     setModalOpen(true);
   };
 
@@ -43,19 +37,8 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
     if (currentVariations.length > 1) {
       form.setValue(
         "variations",
-        currentVariations.filter((_, i) => i !== index),
-        { shouldValidate: true }
+        currentVariations.filter((_, i) => i !== index)
       );
-      toast({
-        title: "Variation Removed",
-        description: "The product variation has been removed successfully.",
-      });
-    } else {
-      toast({
-        title: "Cannot Remove Variation",
-        description: "At least one variation is required for the product.",
-        variant: "destructive",
-      });
     }
   };
 
