@@ -22,7 +22,7 @@ interface ProductColorFieldProps {
 }
 
 const ProductColorField = ({ form, index }: ProductColorFieldProps) => {
-  const name = index !== undefined ? `variations.${index}.color` as const : "color";
+  const name = index !== undefined ? `variations.${index}.color` as const : `variations.0.color` as const;
 
   return (
     <FormField
@@ -31,7 +31,7 @@ const ProductColorField = ({ form, index }: ProductColorFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Color</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
+          <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select color" />

@@ -22,7 +22,7 @@ interface ProductSizeFieldProps {
 }
 
 const ProductSizeField = ({ form, index }: ProductSizeFieldProps) => {
-  const name = index !== undefined ? `variations.${index}.size` as const : "size";
+  const name = index !== undefined ? `variations.${index}.size` as const : `variations.0.size` as const;
 
   return (
     <FormField
@@ -31,7 +31,7 @@ const ProductSizeField = ({ form, index }: ProductSizeFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Size</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
+          <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select size" />

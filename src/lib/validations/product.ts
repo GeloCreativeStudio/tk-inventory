@@ -1,4 +1,4 @@
-import * as z from "zod"
+import * as z from "zod";
 import { v4 as uuidv4 } from "uuid";
 
 const productVariationSchema = z.object({
