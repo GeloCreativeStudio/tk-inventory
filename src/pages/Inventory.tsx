@@ -9,7 +9,7 @@ import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import InventoryHeader from "@/components/inventory/InventoryHeader";
 import InventoryDialogs from "@/components/inventory/InventoryDialogs";
 import { testProducts } from "@/data/testProducts";
-import { Dialog } from "@/components/ui/dialog";
+import { DialogProvider } from "@/components/ui/dialog";
 
 const Inventory = () => {
   const [products, setProducts] = useState<Product[]>(testProducts);
@@ -114,8 +114,8 @@ const Inventory = () => {
   return (
     <Layout>
       <div className="space-y-8">
-        <Dialog>
-          <InventoryHeader />
+        <DialogProvider>
+          <InventoryHeader setOpen={setOpen} />
 
           <ProductFilters
             searchQuery={searchQuery}
@@ -151,7 +151,7 @@ const Inventory = () => {
             product={viewProduct} 
             onClose={() => setViewProduct(null)} 
           />
-        </Dialog>
+        </DialogProvider>
       </div>
     </Layout>
   );

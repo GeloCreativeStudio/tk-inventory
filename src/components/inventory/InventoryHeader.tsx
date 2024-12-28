@@ -3,7 +3,11 @@ import { Plus } from "lucide-react";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 
-const InventoryHeader = () => {
+interface InventoryHeaderProps {
+  setOpen: (open: boolean) => void;
+}
+
+const InventoryHeader = ({ setOpen }: InventoryHeaderProps) => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
 
@@ -18,11 +22,9 @@ const InventoryHeader = () => {
         </p>
       </div>
       {isAdmin && (
-        <DialogTrigger asChild>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add Product
-          </Button>
-        </DialogTrigger>
+        <Button onClick={() => setOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Add Product
+        </Button>
       )}
     </div>
   );
