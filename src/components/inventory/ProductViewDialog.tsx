@@ -82,21 +82,31 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
           {/* Variations Section */}
           <div className="px-6 pb-6">
             <Separator className="my-6" />
-            <div className="space-y-4">
-              <div className="text-sm font-medium text-foreground">
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-foreground">
                 Available Variations
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {product.variations.map((variation) => (
                   <div 
                     key={variation.id}
-                    className="flex flex-col gap-2 p-3 rounded-lg border bg-card shadow-sm hover:bg-accent/5 transition-colors"
+                    className="flex flex-col p-4 rounded-lg border bg-card hover:bg-accent/5 transition-colors"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Size: {variation.size}</span>
-                      <span className="text-sm font-medium">Color: {variation.color}</span>
+                    <div className="flex flex-col space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground uppercase tracking-wider">Size</span>
+                          <span className="text-sm font-medium">{variation.size}</span>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className="text-xs text-muted-foreground uppercase tracking-wider">Color</span>
+                          <span className="text-sm font-medium">{variation.color}</span>
+                        </div>
+                      </div>
+                      <div className="pt-2">
+                        <StockBadge stock={variation.stock} />
+                      </div>
                     </div>
-                    <StockBadge stock={variation.stock} />
                   </div>
                 ))}
               </div>
