@@ -58,8 +58,8 @@ const ProductVariationModal = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] p-0">
+    <Dialog open={open} onOpenChange={onClose} modal={false}>
+      <DialogContent className="max-h-[90vh] p-0 shadow-lg border-2">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>
             {variationIndex === -1 ? "Add New Variation" : "Edit Variation"}
