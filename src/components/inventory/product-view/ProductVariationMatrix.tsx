@@ -1,8 +1,8 @@
 import { Product } from "@/types/inventory";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import StockBadge from "../table/StockBadge";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import StockBadge from "../table/StockBadge";
 
 interface ProductVariationMatrixProps {
   product: Product;
@@ -47,11 +47,11 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
           Total Stock: {overallTotal}
         </Badge>
       </div>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-lg">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableRow className="bg-muted/50 hover:bg-muted/50 whitespace-nowrap">
                 <TableHead className="w-[150px] font-semibold text-foreground border-r">
                   <div className="flex items-center justify-between">
                     <span>Size</span>
@@ -62,12 +62,12 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                 {colors.map(color => (
                   <TableHead 
                     key={color}
-                    className="text-center font-semibold text-foreground min-w-[100px] border-r"
+                    className="text-center font-semibold text-foreground min-w-[100px] border-r whitespace-nowrap"
                   >
                     {color}
                   </TableHead>
                 ))}
-                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-secondary/5">
+                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-secondary/5 whitespace-nowrap">
                   Total
                 </TableHead>
               </TableRow>
@@ -77,7 +77,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                 <TableRow 
                   key={size}
                   className={cn(
-                    "transition-colors hover:bg-muted/5",
+                    "transition-colors hover:bg-muted/5 whitespace-nowrap",
                     index % 2 === 0 ? "bg-background" : "bg-muted/30"
                   )}
                 >
@@ -106,7 +106,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-secondary/5 font-medium hover:bg-secondary/10">
+              <TableRow className="bg-secondary/5 font-medium hover:bg-secondary/10 whitespace-nowrap">
                 <TableCell className="border-r">Total</TableCell>
                 {colors.map(color => (
                   <TableCell 
