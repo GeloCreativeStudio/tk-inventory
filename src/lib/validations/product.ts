@@ -14,7 +14,6 @@ export const productSchema = z.object({
   category: z.string().min(1, "Category is required"),
   price: z.number().min(0, "Price must be greater than or equal to 0"),
   sku: z.string().optional(),
-  image: z.string().optional(),
   variations: z.array(productVariationSchema).min(1, "At least one variation is required"),
 });
 

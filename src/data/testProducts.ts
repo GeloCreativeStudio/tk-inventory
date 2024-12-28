@@ -7,7 +7,6 @@ export const testProducts: Product[] = [
     category: "Clothing",
     price: 499,
     sku: "CLO-CTS-0001",
-    image: "public/img_test/001BLACK.jpg",
     variations: [
       {
         id: "var-1",
@@ -38,7 +37,6 @@ export const testProducts: Product[] = [
     category: "Clothing",
     price: 899,
     sku: "CLO-PRH-0002",
-    image: "public/img_test/001WHITE.jpg",
     variations: [
       {
         id: "var-4",

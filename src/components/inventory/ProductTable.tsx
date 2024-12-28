@@ -9,7 +9,6 @@ import {
 import { Product } from "@/types/inventory";
 import StockBadge from "./table/StockBadge";
 import ProductActions from "./table/ProductActions";
-import { Image } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/currency";
 
 interface ProductTableProps {
@@ -39,7 +38,6 @@ const ProductTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-slate-50 whitespace-nowrap">
-            <TableHead className="font-semibold w-12">Image</TableHead>
             <TableHead className="font-semibold">SKU</TableHead>
             <TableHead className="font-semibold">Name</TableHead>
             <TableHead className="font-semibold">Category</TableHead>
@@ -53,21 +51,6 @@ const ProductTable = ({
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id} className="hover:bg-slate-50/50 whitespace-nowrap">
-              <TableCell>
-                {product.image ? (
-                  <div className="w-10 h-10 rounded-md overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-10 h-10 rounded-md bg-slate-100 flex items-center justify-center">
-                    <Image className="w-5 h-5 text-slate-400" />
-                  </div>
-                )}
-              </TableCell>
               <TableCell className="font-mono text-sm">{product.sku || '-'}</TableCell>
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>{product.category}</TableCell>

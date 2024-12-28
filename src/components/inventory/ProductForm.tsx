@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Product, ProductVariation } from "@/types/inventory";
+import { Product } from "@/types/inventory";
 import { productSchema, ProductFormValues, generateSKU } from "@/lib/validations/product";
 import { v4 as uuidv4 } from "uuid";
 import ProductMainFields from "./form-sections/ProductMainFields";
@@ -21,7 +21,6 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       name: initialData?.name || "",
       category: initialData?.category || "",
       price: initialData?.price || 0,
-      image: initialData?.image || "",
       variations: initialData?.variations || [
         {
           id: uuidv4(),
@@ -29,7 +28,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
           color: "",
           stock: 0,
           images: [],
-        } as ProductVariation,
+        },
       ],
     },
   });
@@ -41,7 +40,6 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       category: data.category,
       price: data.price,
       sku: mode === "create" ? generateSKU(data) : initialData?.sku || "",
-      image: data.image,
       variations: data.variations.map(variation => ({
         id: variation.id || uuidv4(),
         size: variation.size,
