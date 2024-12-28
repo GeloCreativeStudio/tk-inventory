@@ -39,30 +39,31 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
   const overallTotal = Array.from(stockMap.values()).reduce((sum, stock) => sum + stock, 0);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Variation Availability Matrix</h3>
-        <div className="text-sm text-muted-foreground">
-          Total Stock: <span className="font-semibold text-foreground">{overallTotal}</span>
+    <div className="space-y-4 w-full">
+      <div className="flex items-center justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 sticky top-0 py-4">
+        <h3 className="text-xl font-semibold tracking-tight">Variation Availability Matrix</h3>
+        <div className="text-sm">
+          Total Stock: <span className="font-semibold text-primary">{overallTotal}</span>
         </div>
       </div>
-      <div className="border rounded-lg overflow-hidden">
+
+      <div className="relative rounded-xl border shadow-sm">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="sticky top-0 bg-background border-b">
-              <TableRow className="hover:bg-background/0">
-                <TableHead className="h-12 px-4 text-left align-middle font-medium bg-muted/50">
+            <TableHeader className="sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-40">
+              <TableRow className="hover:bg-background/0 border-b">
+                <TableHead className="h-12 px-4 text-left align-middle font-medium bg-muted/50 w-32">
                   Size / Color
                 </TableHead>
                 {colors.map(color => (
                   <TableHead 
                     key={color}
-                    className="h-12 px-4 text-center align-middle font-medium bg-muted/50"
+                    className="h-12 px-6 text-center align-middle font-medium bg-muted/50 min-w-[120px]"
                   >
                     {color}
                   </TableHead>
                 ))}
-                <TableHead className="h-12 px-4 text-center align-middle font-medium bg-muted/50">
+                <TableHead className="h-12 px-6 text-center align-middle font-medium bg-muted/50 w-32">
                   Total
                 </TableHead>
               </TableRow>
@@ -72,17 +73,17 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                 <TableRow 
                   key={size}
                   className={cn(
-                    "transition-colors",
-                    index % 2 === 0 ? "bg-background" : "bg-muted/30"
+                    "transition-colors hover:bg-muted/5",
+                    index % 2 === 0 ? "bg-background" : "bg-muted/[0.025]"
                   )}
                 >
-                  <TableCell className="font-medium border-r">{size}</TableCell>
+                  <TableCell className="font-medium border-r px-4">{size}</TableCell>
                   {colors.map(color => {
                     const stock = stockMap.get(`${size}-${color}`) ?? null;
                     return (
                       <TableCell 
                         key={`${size}-${color}`}
-                        className="text-center border-r"
+                        className="text-center border-r px-6"
                       >
                         {stock !== null ? (
                           <div className="flex justify-center">
@@ -94,22 +95,22 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                       </TableCell>
                     );
                   })}
-                  <TableCell className="text-center font-medium bg-muted/20">
+                  <TableCell className="text-center font-medium bg-muted/10 px-6">
                     {rowTotals.get(size)}
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-muted/10 font-medium">
-                <TableCell className="border-r">Total</TableCell>
+              <TableRow className="bg-muted/5 font-medium border-t">
+                <TableCell className="border-r px-4">Total</TableCell>
                 {colors.map(color => (
                   <TableCell 
                     key={color}
-                    className="text-center border-r"
+                    className="text-center border-r px-6"
                   >
                     {columnTotals.get(color)}
                   </TableCell>
                 ))}
-                <TableCell className="text-center bg-muted/30 font-semibold">
+                <TableCell className="text-center bg-muted/20 font-semibold px-6">
                   {overallTotal}
                 </TableCell>
               </TableRow>
