@@ -1,34 +1,18 @@
 import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Product } from "@/types/inventory";
 import ProductTable from "@/components/inventory/ProductTable";
-import ProductForm from "@/components/inventory/ProductForm";
 import ProductFilters from "@/components/inventory/ProductFilters";
 import ProductViewDialog from "@/components/inventory/ProductViewDialog";
-import { Product } from "@/types/inventory";
+import InventoryHeader from "@/components/inventory/InventoryHeader";
+import InventoryDialogs from "@/components/inventory/InventoryDialogs";
+import { testProducts } from "@/data/testProducts";
+import { Dialog } from "@/components/ui/dialog";
 
 const Inventory = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(testProducts);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
@@ -130,95 +114,44 @@ const Inventory = () => {
   return (
     <Layout>
       <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Inventory</h2>
-            <p className="text-muted-foreground">
-              {isAdmin 
-                ? "Manage your inventory items here."
-                : "Browse inventory items here."}
-            </p>
-          </div>
-          {isAdmin && (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" /> Add Product
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Product</DialogTitle>
-                </DialogHeader>
-                <ProductForm onSubmit={handleAddProduct} />
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
+        <Dialog>
+          <InventoryHeader />
 
-        <ProductFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          selectedSize={selectedSize}
-          onSizeChange={setSelectedSize}
-          selectedColor={selectedColor}
-          onColorChange={setSelectedColor}
-        />
+          <ProductFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            selectedSize={selectedSize}
+            onSizeChange={setSelectedSize}
+            selectedColor={selectedColor}
+            onColorChange={setSelectedColor}
+          />
 
-        <ProductTable
-          products={filteredProducts}
-          onView={setViewProduct}
-          onEdit={isAdmin ? setEditProduct : undefined}
-          onDelete={isAdmin ? setDeleteProduct : undefined}
-        />
+          <ProductTable
+            products={filteredProducts}
+            onView={setViewProduct}
+            onEdit={isAdmin ? setEditProduct : undefined}
+            onDelete={isAdmin ? setDeleteProduct : undefined}
+          />
 
-        {/* View Dialog */}
-        <ProductViewDialog 
-          product={viewProduct} 
-          onClose={() => setViewProduct(null)} 
-        />
+          <InventoryDialogs
+            open={open}
+            editProduct={editProduct}
+            deleteProduct={deleteProduct}
+            setOpen={setOpen}
+            setEditProduct={setEditProduct}
+            setDeleteProduct={setDeleteProduct}
+            handleAddProduct={handleAddProduct}
+            handleEditProduct={handleEditProduct}
+            handleDeleteConfirm={handleDeleteConfirm}
+          />
 
-        {/* Edit Dialog - Only shown for admin */}
-        {isAdmin && (
-          <Dialog open={!!editProduct} onOpenChange={() => setEditProduct(null)}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Product</DialogTitle>
-              </DialogHeader>
-              <ProductForm
-                mode="edit"
-                initialData={editProduct || undefined}
-                onSubmit={handleEditProduct}
-              />
-            </DialogContent>
-          </Dialog>
-        )}
-
-        {/* Delete Confirmation Dialog - Only shown for admin */}
-        {isAdmin && (
-          <AlertDialog
-            open={!!deleteProduct}
-            onOpenChange={() => setDeleteProduct(null)}
-          >
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  product from your inventory.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteConfirm}>
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+          <ProductViewDialog 
+            product={viewProduct} 
+            onClose={() => setViewProduct(null)} 
+          />
+        </Dialog>
       </div>
     </Layout>
   );
