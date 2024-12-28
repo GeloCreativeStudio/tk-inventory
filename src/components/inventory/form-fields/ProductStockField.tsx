@@ -7,24 +7,24 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/types/inventory";
 
-interface ProductPriceFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+interface ProductStockFieldProps {
+  form: UseFormReturn<ProductFormValues>;
+  name: string;
 }
 
-const ProductPriceField = ({ form }: ProductPriceFieldProps) => {
+const ProductStockField = ({ form, name }: ProductStockFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name="price"
+      name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Price</FormLabel>
+          <FormLabel>Stock</FormLabel>
           <FormControl>
             <Input 
-              type="number" 
-              step="0.01" 
+              type="number"
               {...field}
               onChange={(e) => field.onChange(e.target.valueAsNumber)}
             />
@@ -36,4 +36,4 @@ const ProductPriceField = ({ form }: ProductPriceFieldProps) => {
   );
 };
 
-export default ProductPriceField;
+export default ProductStockField;

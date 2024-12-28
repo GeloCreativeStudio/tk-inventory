@@ -14,7 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import ProductForm from "./ProductForm";
 import { Product } from "@/types/inventory";
 
@@ -44,21 +43,24 @@ const InventoryDialogs = ({
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold">
-              {editProduct ? "Edit Product" : "Add New Product"}
-            </DialogTitle>
+            <DialogTitle>Add New Product</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-full max-h-[calc(90vh-8rem)]">
-            <div className="p-6">
-              <ProductForm
-                mode={editProduct ? "edit" : "create"}
-                initialData={editProduct || undefined}
-                onSubmit={editProduct ? handleEditProduct : handleAddProduct}
-              />
-            </div>
-          </ScrollArea>
+          <ProductForm onSubmit={handleAddProduct} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!editProduct} onOpenChange={() => setEditProduct(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Product</DialogTitle>
+          </DialogHeader>
+          <ProductForm
+            mode="edit"
+            initialData={editProduct || undefined}
+            onSubmit={handleEditProduct}
+          />
         </DialogContent>
       </Dialog>
 

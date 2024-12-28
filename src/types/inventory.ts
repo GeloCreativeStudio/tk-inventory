@@ -19,7 +19,7 @@ export interface ProductFormValues {
   name: string;
   category: string;
   price: number;
-  variations: Omit<ProductVariation, 'id'>[];
   sku?: string;
   image?: string;
+  variations: ProductVariation[];
 }

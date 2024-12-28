@@ -1,172 +1,90 @@
-import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues, ProductVariation } from "@/types/inventory";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Trash2 } from "lucide-react";
-import { sizes, colors } from "@/lib/constants";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Product } from "@/types/inventory";
+import { Plus, Trash2 } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
+import ProductSizeField from "./ProductSizeField";
+import ProductColorField from "./ProductColorField";
+import ProductStockField from "./ProductStockField";
 
 interface ProductVariationsFieldProps {
-  form: UseFormReturn<ProductFormValues>;
+  form: UseFormReturn<Partial<Product>>;
 }
 
 const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {
-  const [newSize, setNewSize] = useState("");
-  const [newColor, setNewColor] = useState("");
-  const [newStock, setNewStock] = useState<number>(0);
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "variations",
+  });
 
-  const variations = form.watch("variations") || [];
-
-  const handleAddVariation = () => {
-    if (!newSize || !newColor || newStock < 0) return;
-
-    // Check if variation already exists
-    const exists = variations.some(
-      (v) => v.size === newSize && v.color === newColor
-    );
-
-    if (exists) {
-      form.setError("variations", {
-        message: "This size and color combination already exists",
-      });
-      return;
-    }
-
-    const newVariation: ProductVariation = {
-      id: crypto.randomUUID(),
-      size: newSize,
-      color: newColor,
-      stock: newStock,
-    };
-
-    form.setValue("variations", [...variations, newVariation]);
-    
-    // Reset inputs
-    setNewSize("");
-    setNewColor("");
-    setNewStock(0);
-  };
-
-  const handleRemoveVariation = (variationId: string) => {
-    const updatedVariations = variations.filter((v) => v.id !== variationId);
-    form.setValue("variations", updatedVariations);
+  const addVariation = () => {
+    append({
+      id: uuidv4(),
+      size: "",
+      color: "",
+      stock: 0,
+    });
   };
 
   return (
-    <FormField
-      control={form.control}
-      name="variations"
-      render={() => (
-        <FormItem className="space-y-4">
-          <div className="flex flex-wrap gap-4 items-end mb-4">
-            <div className="space-y-2">
-              <FormLabel>Size</FormLabel>
-              <Select value={newSize} onValueChange={setNewSize}>
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue placeholder="Size" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sizes.map((size) => (
-                    <SelectItem key={size} value={size}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <FormLabel>Product Variations</FormLabel>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={addVariation}
+          className="h-8"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Add Variation
+        </Button>
+      </div>
+
+      <FormField
+        control={form.control}
+        name="variations"
+        render={() => (
+          <FormItem>
+            <div className="space-y-4">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="flex items-start space-x-4 rounded-lg border p-4"
+                >
+                  <div className="grid flex-1 gap-4 md:grid-cols-3">
+                    <ProductSizeField
+                      form={form}
+                      name={`variations.${index}.size`}
+                    />
+                    <ProductColorField
+                      form={form}
+                      name={`variations.${index}.color`}
+                    />
+                    <ProductStockField
+                      form={form}
+                      name={`variations.${index}.stock`}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => remove(index)}
+                    className="h-8 w-8"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
             </div>
-
-            <div className="space-y-2">
-              <FormLabel>Color</FormLabel>
-              <Select value={newColor} onValueChange={setNewColor}>
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue placeholder="Color" />
-                </SelectTrigger>
-                <SelectContent>
-                  {colors.map((color) => (
-                    <SelectItem key={color} value={color}>
-                      {color}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <FormLabel>Stock</FormLabel>
-              <Input
-                type="number"
-                className="w-[120px]"
-                value={newStock}
-                onChange={(e) => setNewStock(parseInt(e.target.value) || 0)}
-                min={0}
-              />
-            </div>
-
-            <Button 
-              type="button" 
-              variant="secondary"
-              onClick={handleAddVariation}
-              className="mt-2"
-            >
-              Add Variation
-            </Button>
-          </div>
-
-          {variations.length > 0 && (
-            <ScrollArea className="h-[200px] w-full rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Size</TableHead>
-                    <TableHead>Color</TableHead>
-                    <TableHead>Stock</TableHead>
-                    <TableHead className="w-[100px]">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {variations.map((variation) => (
-                    <TableRow key={variation.id}>
-                      <TableCell>{variation.size}</TableCell>
-                      <TableCell>{variation.color}</TableCell>
-                      <TableCell>{variation.stock}</TableCell>
-                      <TableCell>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRemoveVariation(variation.id)}
-                          className="h-8 w-8 text-slate-600 hover:text-red-600"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
-          )}
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
   );
 };
 

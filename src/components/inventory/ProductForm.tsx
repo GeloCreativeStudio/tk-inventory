@@ -2,9 +2,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/types/inventory";
-import { productSchema, generateSKU } from "@/lib/validations/product";
+import { productSchema, ProductFormValues, generateSKU } from "@/lib/validations/product";
+import { v4 as uuidv4 } from "uuid";
 import ProductNameField from "./form-fields/ProductNameField";
 import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
@@ -18,29 +18,25 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
-  const form = useForm({
+  const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: initialData?.name || "",
-      category: initialData?.category || "",
-      price: initialData?.price || 0,
-      variations: initialData?.variations.map(({ size, color, stock }) => ({
-        size,
-        color,
-        stock,
-      })) || [],
-      image: initialData?.image || "",
-      sku: initialData?.sku || "",
+    defaultValues: initialData || {
+      name: "",
+      category: "",
+      price: 0,
+      variations: [{
+        id: uuidv4(),
+        size: "",
+        color: "",
+        stock: 0,
+      }],
+      image: "",
     },
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    const productData: Partial<Product> = {
+    const productData = {
       ...data,
-      variations: data.variations.map(variation => ({
-        id: crypto.randomUUID(),
-        ...variation,
-      })),
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
     onSubmit(productData);
@@ -49,45 +45,15 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          {/* Left Column - Product Details */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold mb-4">Product Details</h3>
-                <ProductNameField form={form} />
-                <ProductCategoryField form={form} />
-                <ProductPriceField form={form} />
-              </div>
-            </CardContent>
-          </Card>
+        <ProductNameField form={form} />
+        <ProductCategoryField form={form} />
+        <ProductPriceField form={form} />
+        <ProductVariationsField form={form} />
+        <ProductImageField form={form} />
 
-          {/* Right Column - Product Image */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold mb-4">Product Image</h3>
-                <ProductImageField form={form} />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Bottom Section - Product Variations */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold mb-4">Product Variations</h3>
-              <ProductVariationsField form={form} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-end mt-6">
-          <Button type="submit" size="lg">
-            {mode === "create" ? "Add Product" : "Update Product"}
-          </Button>
-        </div>
+        <Button type="submit" className="w-full">
+          {mode === "create" ? "Add Product" : "Update Product"}
+        </Button>
       </form>
     </Form>
   );

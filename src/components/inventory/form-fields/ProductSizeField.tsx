@@ -13,31 +13,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
-import { categories } from "@/lib/constants";
+import { ProductFormValues } from "@/types/inventory";
+import { sizes } from "@/lib/constants";
 
-interface ProductCategoryFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+interface ProductSizeFieldProps {
+  form: UseFormReturn<ProductFormValues>;
+  name: string;
 }
 
-const ProductCategoryField = ({ form }: ProductCategoryFieldProps) => {
+const ProductSizeField = ({ form, name }: ProductSizeFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name="category"
+      name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Category</FormLabel>
+          <FormLabel>Size</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select category" />
+                <SelectValue placeholder="Select size" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
+              {sizes.map((size) => (
+                <SelectItem key={size} value={size}>
+                  {size}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -49,4 +50,4 @@ const ProductCategoryField = ({ form }: ProductCategoryFieldProps) => {
   );
 };
 
-export default ProductCategoryField;
+export default ProductSizeField;

@@ -7,17 +7,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/types/inventory";
+import { Product } from "@/types/inventory";
 import { useState, useEffect } from "react";
 import { Image } from "lucide-react";
 
 interface ProductImageFieldProps {
-  form: UseFormReturn<ProductFormValues>;
+  form: UseFormReturn<Partial<Product>>;
 }
 
 const ProductImageField = ({ form }: ProductImageFieldProps) => {
   const [preview, setPreview] = useState<string | null>(null);
 
+  // Update preview when form value changes
   useEffect(() => {
     const currentValue = form.getValues("image");
     if (currentValue) {
@@ -54,17 +55,17 @@ const ProductImageField = ({ form }: ProductImageFieldProps) => {
                 className="cursor-pointer"
               />
               {(preview || field.value) && (
-                <div className="relative aspect-square rounded-lg border overflow-hidden bg-slate-50">
+                <div className="relative w-32 h-32 border rounded-md overflow-hidden">
                   <img
                     src={preview || field.value}
                     alt="Product preview"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}
               {!preview && !field.value && (
-                <div className="aspect-square rounded-lg border flex items-center justify-center bg-slate-50">
-                  <Image className="w-12 h-12 text-slate-300" />
+                <div className="w-32 h-32 border rounded-md flex items-center justify-center bg-slate-50">
+                  <Image className="w-8 h-8 text-slate-300" />
                 </div>
               )}
             </div>
