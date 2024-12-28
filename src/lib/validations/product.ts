@@ -2,7 +2,7 @@ import * as z from "zod";
 import { Product } from "@/types/inventory";
 
 const productVariationSchema = z.object({
-  id: z.string(),
+  id: z.string().min(1, "ID is required"),
   size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
   stock: z.number().int().min(0, "Stock must be greater than or equal to 0"),
