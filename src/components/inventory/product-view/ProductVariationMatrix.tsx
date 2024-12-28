@@ -17,9 +17,35 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
     product.variations.map(v => [`${v.size}-${v.color}`, v.stock])
   );
 
+  // Calculate row totals (total stock per size)
+  const rowTotals = sizes.reduce((acc, size) => {
+    const total = colors.reduce((sum, color) => {
+      return sum + (stockMap.get(`${size}-${color}`) ?? 0);
+    }, 0);
+    acc.set(size, total);
+    return acc;
+  }, new Map<string, number>());
+
+  // Calculate column totals (total stock per color)
+  const columnTotals = colors.reduce((acc, color) => {
+    const total = sizes.reduce((sum, size) => {
+      return sum + (stockMap.get(`${size}-${color}`) ?? 0);
+    }, 0);
+    acc.set(color, total);
+    return acc;
+  }, new Map<string, number>());
+
+  // Calculate overall total
+  const overallTotal = Array.from(stockMap.values()).reduce((sum, stock) => sum + stock, 0);
+
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Variation Availability Matrix</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Variation Availability Matrix</h3>
+        <div className="text-sm text-muted-foreground">
+          Total Stock: <span className="font-semibold text-foreground">{overallTotal}</span>
+        </div>
+      </div>
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
@@ -36,6 +62,9 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     {color}
                   </TableHead>
                 ))}
+                <TableHead className="h-12 px-4 text-center align-middle font-medium bg-muted/50">
+                  Total
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -53,7 +82,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     return (
                       <TableCell 
                         key={`${size}-${color}`}
-                        className="text-center border-r last:border-r-0"
+                        className="text-center border-r"
                       >
                         {stock !== null ? (
                           <div className="flex justify-center">
@@ -65,8 +94,25 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                       </TableCell>
                     );
                   })}
+                  <TableCell className="text-center font-medium bg-muted/20">
+                    {rowTotals.get(size)}
+                  </TableCell>
                 </TableRow>
               ))}
+              <TableRow className="bg-muted/10 font-medium">
+                <TableCell className="border-r">Total</TableCell>
+                {colors.map(color => (
+                  <TableCell 
+                    key={color}
+                    className="text-center border-r"
+                  >
+                    {columnTotals.get(color)}
+                  </TableCell>
+                ))}
+                <TableCell className="text-center bg-muted/30 font-semibold">
+                  {overallTotal}
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </div>
