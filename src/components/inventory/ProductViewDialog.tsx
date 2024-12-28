@@ -6,14 +6,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Product } from "@/types/inventory";
-import { Badge } from "@/components/ui/badge";
-import { Package2, ChevronLeft, ChevronRight } from "lucide-react";
-import StockBadge from "./table/StockBadge";
-import { formatCurrency } from "@/lib/utils/currency";
+import { Package2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { useState, useMemo } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import ProductImageSection from "./product-view/ProductImageSection";
+import ProductInfoSection from "./product-view/ProductInfoSection";
+import ProductVariationSection from "./product-view/ProductVariationSection";
 
 interface ProductViewDialogProps {
   product: Product | null;
@@ -38,18 +36,6 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
 
   // Get images for the selected variation
   const currentImages = selectedVariation?.images || [];
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === currentImages.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === 0 ? currentImages.length - 1 : prev - 1
-    );
-  };
 
   // Calculate total stock for the product
   const getTotalStock = (product: Product) => {
@@ -79,120 +65,26 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
         
         <ScrollArea className="max-h-[calc(90vh-8rem)]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-            {/* Product Image Section */}
-            <div className="space-y-4">
-              <div className="relative aspect-square rounded-lg overflow-hidden border bg-slate-50 shadow-sm">
-                {currentImages.length > 0 ? (
-                  <>
-                    <img
-                      src={currentImages[currentImageIndex]}
-                      alt={`${product.name} - Image ${currentImageIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    {currentImages.length > 1 && (
-                      <>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
-                          onClick={prevImage}
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
-                          onClick={nextImage}
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-slate-300">No images available</span>
-                  </div>
-                )}
-              </div>
-              {currentImages.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {currentImages.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`relative w-16 h-16 rounded-md overflow-hidden border-2 ${
-                        index === currentImageIndex
-                          ? "border-primary"
-                          : "border-transparent"
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ProductImageSection
+              images={currentImages}
+              currentImageIndex={currentImageIndex}
+              setCurrentImageIndex={setCurrentImageIndex}
+            />
             
-            {/* Product Details Section */}
             <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-semibold text-foreground">{product.name}</h2>
-                <div className="mt-2 font-mono text-sm text-muted-foreground">
-                  SKU: {product.sku || 'N/A'}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-primary">
-                  {formatCurrency(product.price)}
-                </div>
-                <StockBadge stock={getCurrentStock()} />
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">Category</div>
-                <Badge variant="secondary" className="text-sm">{product.category}</Badge>
-              </div>
-
-              {/* Size Selection */}
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-foreground">Select Size</h3>
-                <div className="flex flex-wrap gap-2">
-                  {sizes.map((size) => (
-                    <Button
-                      key={size}
-                      variant={selectedSize === size ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedSize(size)}
-                    >
-                      {size}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Color Selection */}
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-foreground">Select Color</h3>
-                <div className="flex flex-wrap gap-2">
-                  {colors.map((color) => (
-                    <Button
-                      key={color}
-                      variant={selectedColor === color ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedColor(color)}
-                    >
-                      {color}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+              <ProductInfoSection
+                product={product}
+                currentStock={getCurrentStock()}
+              />
+              
+              <ProductVariationSection
+                sizes={sizes}
+                colors={colors}
+                selectedSize={selectedSize}
+                selectedColor={selectedColor}
+                onSizeSelect={setSelectedSize}
+                onColorSelect={setSelectedColor}
+              />
             </div>
           </div>
         </ScrollArea>
