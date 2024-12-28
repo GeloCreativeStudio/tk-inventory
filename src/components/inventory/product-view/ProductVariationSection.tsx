@@ -44,12 +44,7 @@ const ProductVariationSection = ({
                 size="sm"
                 onClick={() => onSizeSelect(size)}
                 disabled={!availableSizes.includes(size)}
-                className={`
-                  transition-all duration-200
-                  ${!availableSizes.includes(size) ? "opacity-50 cursor-not-allowed" : ""}
-                  ${selectedSize === size ? "ring-2 ring-primary ring-offset-2" : ""}
-                  hover:scale-105
-                `}
+                className={`${!availableSizes.includes(size) ? "opacity-50" : ""}`}
               >
                 {size}
               </Button>
@@ -74,12 +69,7 @@ const ProductVariationSection = ({
                 size="sm"
                 onClick={() => onColorSelect(color)}
                 disabled={!availableColors.includes(color)}
-                className={`
-                  transition-all duration-200
-                  ${!availableColors.includes(color) ? "opacity-50 cursor-not-allowed" : ""}
-                  ${selectedColor === color ? "ring-2 ring-primary ring-offset-2" : ""}
-                  hover:scale-105
-                `}
+                className={`${!availableColors.includes(color) ? "opacity-50" : ""}`}
               >
                 {color}
               </Button>

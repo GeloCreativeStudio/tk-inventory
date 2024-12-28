@@ -32,17 +32,20 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   // Update available colors when size changes
   const handleSizeSelect = (size: string) => {
     if (!product) return;
-    // If clicking the already selected size, deselect it
-    if (size === selectedSize) {
+    
+    // Get colors available for the selected size
+    const colorsForSize = product.variations
+      .filter(v => v.size === size)
+      .map(v => v.color);
+    
+    // Only allow deselection if there are available variations
+    if (size === selectedSize && colorsForSize.length > 0) {
       setSelectedSize("");
-      setAvailableColors(colors); // Reset available colors to all colors
+      setAvailableColors(colors);
       return;
     }
     
     setSelectedSize(size);
-    const colorsForSize = product.variations
-      .filter(v => v.size === size)
-      .map(v => v.color);
     setAvailableColors(colorsForSize);
     
     // Reset color if current selection is not available for new size
@@ -54,17 +57,20 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   // Update available sizes when color changes
   const handleColorSelect = (color: string) => {
     if (!product) return;
-    // If clicking the already selected color, deselect it
-    if (color === selectedColor) {
+    
+    // Get sizes available for the selected color
+    const sizesForColor = product.variations
+      .filter(v => v.color === color)
+      .map(v => v.size);
+    
+    // Only allow deselection if there are available variations
+    if (color === selectedColor && sizesForColor.length > 0) {
       setSelectedColor("");
-      setAvailableSizes(sizes); // Reset available sizes to all sizes
+      setAvailableSizes(sizes);
       return;
     }
     
     setSelectedColor(color);
-    const sizesForColor = product.variations
-      .filter(v => v.color === color)
-      .map(v => v.size);
     setAvailableSizes(sizesForColor);
     
     // Reset size if current selection is not available for new color
