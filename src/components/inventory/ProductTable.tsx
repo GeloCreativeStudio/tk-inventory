@@ -25,6 +25,15 @@ const ProductTable = ({
   onEdit, 
   onDelete,
 }: ProductTableProps) => {
+  const getTotalStock = (product: Product) => {
+    return product.variations.reduce((total, variation) => total + variation.stock, 0);
+  };
+
+  const getVariationSummary = (product: Product, field: 'size' | 'color') => {
+    const unique = new Set(product.variations.map(v => v[field]));
+    return Array.from(unique).join(', ');
+  };
+
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-x-auto">
       <Table>
@@ -35,9 +44,9 @@ const ProductTable = ({
             <TableHead className="font-semibold">Name</TableHead>
             <TableHead className="font-semibold">Category</TableHead>
             <TableHead className="font-semibold">Price</TableHead>
-            <TableHead className="font-semibold">Stock</TableHead>
-            <TableHead className="font-semibold">Size</TableHead>
-            <TableHead className="font-semibold">Color</TableHead>
+            <TableHead className="font-semibold">Total Stock</TableHead>
+            <TableHead className="font-semibold">Sizes</TableHead>
+            <TableHead className="font-semibold">Colors</TableHead>
             <TableHead className="font-semibold text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -63,9 +72,9 @@ const ProductTable = ({
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>{product.category}</TableCell>
               <TableCell className="text-accent font-medium">{formatCurrency(product.price)}</TableCell>
-              <TableCell><StockBadge stock={product.stock} /></TableCell>
-              <TableCell>{product.size}</TableCell>
-              <TableCell>{product.color}</TableCell>
+              <TableCell><StockBadge stock={getTotalStock(product)} /></TableCell>
+              <TableCell>{getVariationSummary(product, 'size')}</TableCell>
+              <TableCell>{getVariationSummary(product, 'color')}</TableCell>
               <TableCell className="text-right">
                 <ProductActions 
                   product={product}

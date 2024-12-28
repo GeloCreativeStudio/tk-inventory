@@ -18,6 +18,10 @@ interface ProductViewDialogProps {
 const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   if (!product) return null;
 
+  const getTotalStock = (product: Product) => {
+    return product.variations.reduce((total, variation) => total + variation.stock, 0);
+  };
+
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
@@ -54,7 +58,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               <div className="text-3xl font-bold text-accent">
                 {formatCurrency(product.price)}
               </div>
-              <StockBadge stock={product.stock} />
+              <StockBadge stock={getTotalStock(product)} />
             </div>
 
             <div className="space-y-4">
@@ -63,14 +67,22 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 <Badge variant="secondary">{product.category}</Badge>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Size</div>
-                  <Badge variant="outline">{product.size}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Color</div>
-                  <Badge variant="outline">{product.color}</Badge>
+              <div className="space-y-4">
+                <div className="text-sm font-medium">Variations</div>
+                <div className="grid gap-3">
+                  {product.variations.map((variation) => (
+                    <div 
+                      key={variation.id}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-slate-50"
+                    >
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">
+                          {variation.color} / {variation.size}
+                        </div>
+                        <StockBadge stock={variation.stock} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
