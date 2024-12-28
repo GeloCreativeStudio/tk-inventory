@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Product } from "@/types/inventory";
 import { Badge } from "@/components/ui/badge";
-import { Banknote, Box, Calendar, Image, Package2 } from "lucide-react";
+import { Banknote, Box, Calendar, Image, Package2, Palette, Ruler } from "lucide-react";
 import StockBadge from "./table/StockBadge";
 import { formatCurrency } from "@/lib/utils/currency";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -73,35 +73,41 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 <StockBadge stock={getTotalStock(product)} />
               </div>
 
-              <Separator />
-
               {/* Category */}
               <div className="space-y-2">
                 <div className="text-sm font-medium text-foreground">Category</div>
                 <Badge variant="secondary" className="text-sm">{product.category}</Badge>
               </div>
+            </div>
+          </div>
 
-              {/* Variations */}
-              <div className="space-y-4">
-                <div className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  Available Variations
-                </div>
-                <div className="grid gap-3">
-                  {product.variations.map((variation) => (
-                    <div 
-                      key={variation.id}
-                      className="flex items-center justify-between p-3 rounded-lg border bg-card shadow-sm hover:bg-accent/5 transition-colors"
-                    >
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium text-foreground">
-                          {variation.color} / {variation.size}
-                        </div>
-                        <StockBadge stock={variation.stock} />
+          {/* Variations Section */}
+          <div className="px-6 pb-6">
+            <Separator className="my-6" />
+            <div className="space-y-4">
+              <div className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                Available Variations
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {product.variations.map((variation) => (
+                  <div 
+                    key={variation.id}
+                    className="flex flex-col gap-2 p-3 rounded-lg border bg-card shadow-sm hover:bg-accent/5 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Ruler className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">{variation.size}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Palette className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">{variation.color}</span>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <StockBadge stock={variation.stock} />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
