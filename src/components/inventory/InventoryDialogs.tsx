@@ -44,12 +44,12 @@ const InventoryDialogs = ({
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
+        <DialogContent className="max-w-5xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>Add New Product</DialogTitle>
+            <DialogTitle className="text-2xl">Add New Product</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-full max-h-[calc(90vh-8rem)] pr-4">
-            <div className="p-1">
+          <ScrollArea className="h-full max-h-[calc(90vh-8rem)]">
+            <div className="p-4">
               <ProductForm onSubmit={handleAddProduct} />
             </div>
           </ScrollArea>
@@ -57,12 +57,12 @@ const InventoryDialogs = ({
       </Dialog>
 
       <Dialog open={!!editProduct} onOpenChange={() => setEditProduct(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
+        <DialogContent className="max-w-5xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
+            <DialogTitle className="text-2xl">Edit Product</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-full max-h-[calc(90vh-8rem)] pr-4">
-            <div className="p-1">
+          <ScrollArea className="h-full max-h-[calc(90vh-8rem)]">
+            <div className="p-4">
               <ProductForm
                 mode="edit"
                 initialData={editProduct || undefined}

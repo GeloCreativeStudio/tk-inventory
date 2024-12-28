@@ -9,6 +9,7 @@ import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductImageField from "./form-fields/ProductImageField";
 import ProductVariationsField from "./form-fields/ProductVariationsField";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -43,24 +44,37 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-6">
-            <ProductNameField form={form} />
-            <ProductCategoryField form={form} />
-            <ProductPriceField form={form} />
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  <ProductNameField form={form} />
+                  <ProductCategoryField form={form} />
+                  <ProductPriceField form={form} />
+                </div>
+              </CardContent>
+            </Card>
           </div>
+          
           <div className="space-y-6">
-            <ProductImageField form={form} />
+            <Card>
+              <CardContent className="pt-6">
+                <ProductImageField form={form} />
+              </CardContent>
+            </Card>
           </div>
         </div>
         
-        <div className="pt-4">
-          <ProductVariationsField form={form} />
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <ProductVariationsField form={form} />
+          </CardContent>
+        </Card>
 
-        <div className="pt-6 flex justify-end">
-          <Button type="submit" className="w-full md:w-auto">
+        <div className="flex justify-end">
+          <Button type="submit" size="lg" className="w-full md:w-auto">
             {mode === "create" ? "Add Product" : "Update Product"}
           </Button>
         </div>

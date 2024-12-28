@@ -54,17 +54,17 @@ const ProductImageField = ({ form }: ProductImageFieldProps) => {
                 className="cursor-pointer"
               />
               {(preview || field.value) && (
-                <div className="relative w-32 h-32 border rounded-md overflow-hidden">
+                <div className="relative aspect-square rounded-lg border overflow-hidden bg-slate-50">
                   <img
                     src={preview || field.value}
                     alt="Product preview"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               )}
               {!preview && !field.value && (
-                <div className="w-32 h-32 border rounded-md flex items-center justify-center bg-slate-50">
-                  <Image className="w-8 h-8 text-slate-300" />
+                <div className="aspect-square rounded-lg border flex items-center justify-center bg-slate-50">
+                  <Image className="w-12 h-12 text-slate-300" />
                 </div>
               )}
             </div>
