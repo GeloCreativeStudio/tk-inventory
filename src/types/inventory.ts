@@ -14,3 +14,12 @@ export interface Product {
   image?: string;
   variations: ProductVariation[];
 }
+
+export interface ProductFormValues {
+  name: string;
+  category: string;
+  price: number;
+  sku?: string;
+  image?: string;
+  variations: ProductVariation[];
+}

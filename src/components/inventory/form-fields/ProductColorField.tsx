@@ -13,18 +13,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/types/inventory";
 import { colors } from "@/lib/constants";
 
 interface ProductColorFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
+  name: string;
 }
 
-const ProductColorField = ({ form }: ProductColorFieldProps) => {
+const ProductColorField = ({ form, name }: ProductColorFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name="color"
+      name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Color</FormLabel>

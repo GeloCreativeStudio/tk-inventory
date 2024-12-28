@@ -7,17 +7,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/types/inventory";
 
 interface ProductStockFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
+  name: string;
 }
 
-const ProductStockField = ({ form }: ProductStockFieldProps) => {
+const ProductStockField = ({ form, name }: ProductStockFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name="stock"
+      name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Stock</FormLabel>

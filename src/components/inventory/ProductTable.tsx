@@ -42,40 +42,44 @@ const ProductTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id} className="hover:bg-slate-50/50 whitespace-nowrap">
-              <TableCell>
-                {product.image ? (
-                  <div className="w-10 h-10 rounded-md overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-10 h-10 rounded-md bg-slate-100 flex items-center justify-center">
-                    <Image className="w-5 h-5 text-slate-400" />
-                  </div>
-                )}
-              </TableCell>
-              <TableCell className="font-mono text-sm">{product.sku || '-'}</TableCell>
-              <TableCell className="font-medium">{product.name}</TableCell>
-              <TableCell>{product.category}</TableCell>
-              <TableCell className="text-accent font-medium">{formatCurrency(product.price)}</TableCell>
-              <TableCell><StockBadge stock={product.stock} /></TableCell>
-              <TableCell>{product.size}</TableCell>
-              <TableCell>{product.color}</TableCell>
-              <TableCell className="text-right">
-                <ProductActions 
-                  product={product}
-                  onView={onView}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
+          {products.map((product) => {
+            const mainVariation = product.variations[0] || { size: 'N/A', color: 'N/A', stock: 0 };
+            
+            return (
+              <TableRow key={product.id} className="hover:bg-slate-50/50 whitespace-nowrap">
+                <TableCell>
+                  {product.image ? (
+                    <div className="w-10 h-10 rounded-md overflow-hidden">
+                      <img 
+                        src={product.image} 
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 rounded-md bg-slate-100 flex items-center justify-center">
+                      <Image className="w-5 h-5 text-slate-400" />
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="font-mono text-sm">{product.sku || '-'}</TableCell>
+                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell>{product.category}</TableCell>
+                <TableCell className="text-accent font-medium">{formatCurrency(product.price)}</TableCell>
+                <TableCell><StockBadge stock={mainVariation.stock} /></TableCell>
+                <TableCell>{mainVariation.size}</TableCell>
+                <TableCell>{mainVariation.color}</TableCell>
+                <TableCell className="text-right">
+                  <ProductActions 
+                    product={product}
+                    onView={onView}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
