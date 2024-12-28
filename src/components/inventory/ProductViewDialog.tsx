@@ -12,7 +12,7 @@ import StockBadge from "./table/StockBadge";
 import { formatCurrency } from "@/lib/utils/currency";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
 interface ProductViewDialogProps {
@@ -21,16 +21,22 @@ interface ProductViewDialogProps {
 }
 
 const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
-  const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!product) return null;
 
-  const getTotalStock = (product: Product) => {
-    return product.variations.reduce((total, variation) => total + variation.stock, 0);
-  };
+  // Get unique sizes and colors from variations
+  const sizes = [...new Set(product.variations.map(v => v.size))];
+  const colors = [...new Set(product.variations.map(v => v.color))];
 
-  const selectedVariation = product.variations[selectedVariationIndex];
+  // Find the selected variation based on size and color
+  const selectedVariation = product.variations.find(
+    v => v.size === selectedSize && v.color === selectedColor
+  );
+
+  // Get images for the selected variation
   const currentImages = selectedVariation?.images || [];
 
   const nextImage = () => {
@@ -43,6 +49,19 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
     setCurrentImageIndex((prev) => 
       prev === 0 ? currentImages.length - 1 : prev - 1
     );
+  };
+
+  // Calculate total stock for the product
+  const getTotalStock = (product: Product) => {
+    return product.variations.reduce((total, variation) => total + variation.stock, 0);
+  };
+
+  // Get stock for current selection
+  const getCurrentStock = () => {
+    if (selectedVariation) {
+      return selectedVariation.stock;
+    }
+    return getTotalStock(product);
   };
 
   return (
@@ -133,54 +152,46 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 <div className="text-3xl font-bold text-primary">
                   {formatCurrency(product.price)}
                 </div>
-                <StockBadge stock={getTotalStock(product)} />
+                <StockBadge stock={getCurrentStock()} />
               </div>
 
               <div className="space-y-2">
                 <div className="text-sm font-medium text-foreground">Category</div>
                 <Badge variant="secondary" className="text-sm">{product.category}</Badge>
               </div>
-            </div>
-          </div>
 
-          {/* Variations Section */}
-          <div className="px-6 pb-6">
-            <Separator className="my-6" />
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-foreground">
-                Available Variations
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {product.variations.map((variation, index) => (
-                  <button
-                    key={variation.id}
-                    onClick={() => {
-                      setSelectedVariationIndex(index);
-                      setCurrentImageIndex(0);
-                    }}
-                    className={`text-left p-4 rounded-lg border transition-colors ${
-                      index === selectedVariationIndex
-                        ? "bg-primary/5 border-primary"
-                        : "bg-card hover:bg-accent/5"
-                    }`}
-                  >
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col">
-                          <span className="text-xs text-muted-foreground uppercase tracking-wider">Size</span>
-                          <span className="text-sm font-medium">{variation.size}</span>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <span className="text-xs text-muted-foreground uppercase tracking-wider">Color</span>
-                          <span className="text-sm font-medium">{variation.color}</span>
-                        </div>
-                      </div>
-                      <div className="pt-2">
-                        <StockBadge stock={variation.stock} />
-                      </div>
-                    </div>
-                  </button>
-                ))}
+              {/* Size Selection */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-foreground">Select Size</h3>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((size) => (
+                    <Button
+                      key={size}
+                      variant={selectedSize === size ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Selection */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-foreground">Select Color</h3>
+                <div className="flex flex-wrap gap-2">
+                  {colors.map((color) => (
+                    <Button
+                      key={color}
+                      variant={selectedColor === color ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedColor(color)}
+                    >
+                      {color}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
