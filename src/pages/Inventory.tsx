@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,6 +25,17 @@ const Inventory = () => {
   const { user } = useAuth();
 
   const isAdmin = user?.role === 'admin';
+
+  // Filter products based on search query
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const searchMatch = searchQuery.trim() === "" || 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.sku && product.sku.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      return searchMatch;
+    });
+  }, [products, searchQuery]);
 
   const handleAddProduct = (data: Partial<Product>) => {
     if (!isAdmin) {
@@ -115,7 +126,7 @@ const Inventory = () => {
           />
 
           <ProductTable
-            products={products}
+            products={filteredProducts}
             onView={setViewProduct}
             onEdit={isAdmin ? setEditProduct : undefined}
             onDelete={isAdmin ? setDeleteProduct : undefined}
