@@ -17,22 +17,18 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   const [editingIndex, setEditingIndex] = useState(-1);
 
   const addVariation = () => {
-    const variations = form.getValues("variations") || [];
-    const newVariation = {
-      id: uuidv4(),
-      size: "",
-      color: "",
-      stock: 0,
-      images: [],
-    };
-    
-    form.setValue("variations", [...variations, newVariation], {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    
-    setEditingIndex(variations.length);
+    const currentVariations = form.getValues("variations") || [];
+    form.setValue("variations", [
+      ...currentVariations,
+      {
+        id: uuidv4(),
+        size: "",
+        color: "",
+        stock: 0,
+        images: [],
+      },
+    ]);
+    setEditingIndex(currentVariations.length);
     setModalOpen(true);
   };
 
@@ -41,8 +37,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
     if (currentVariations.length > 1) {
       form.setValue(
         "variations",
-        currentVariations.filter((_, i) => i !== index),
-        { shouldValidate: true }
+        currentVariations.filter((_, i) => i !== index)
       );
     }
   };
@@ -67,7 +62,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => addVariation()}
+          onClick={addVariation}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
