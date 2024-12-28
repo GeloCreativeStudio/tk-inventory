@@ -49,15 +49,19 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-muted/50">
-              <TableRow className="hover:bg-background/0">
-                <TableHead className="w-[150px] font-semibold text-foreground">
-                  Size / Color
+            <TableHeader>
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
+                <TableHead className="w-[150px] font-semibold text-foreground border-r">
+                  <div className="flex items-center justify-between">
+                    <span>Size</span>
+                    <span className="text-muted-foreground">/</span>
+                    <span>Color</span>
+                  </div>
                 </TableHead>
                 {colors.map(color => (
                   <TableHead 
                     key={color}
-                    className="text-center font-semibold text-foreground min-w-[100px]"
+                    className="text-center font-semibold text-foreground min-w-[100px] border-r"
                   >
                     {color}
                   </TableHead>
