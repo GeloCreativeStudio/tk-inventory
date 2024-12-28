@@ -1,8 +1,7 @@
 import * as z from "zod";
-import { Product } from "@/types/inventory";
+import { Product, ProductFormValues } from "@/types/inventory";
 
 const productVariationSchema = z.object({
-  id: z.string().default(() => crypto.randomUUID()),
   size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
   stock: z.number().min(0, "Stock must be greater than or equal to 0"),
@@ -17,7 +16,7 @@ export const productSchema = z.object({
   image: z.string().optional(),
 });
 
-export type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductSchemaType = z.infer<typeof productSchema>;
 
 export const generateSKU = (product: Partial<Product>): string => {
   const category = product.category?.slice(0, 3).toUpperCase() || 'XXX';

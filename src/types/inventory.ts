@@ -15,4 +15,11 @@ export interface Product {
   variations: ProductVariation[];
 }
 
-export type ProductFormValues = Omit<Product, 'id'>;
+export interface ProductFormValues {
+  name: string;
+  category: string;
+  price: number;
+  variations: Omit<ProductVariation, 'id'>[];
+  sku?: string;
+  image?: string;
+}

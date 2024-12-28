@@ -2,14 +2,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/types/inventory";
-import { productSchema, generateSKU, ProductFormValues } from "@/lib/validations/product";
+import { productSchema, generateSKU } from "@/lib/validations/product";
 import ProductNameField from "./form-fields/ProductNameField";
 import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
 import ProductImageField from "./form-fields/ProductImageField";
 import ProductVariationsField from "./form-fields/ProductVariationsField";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -18,13 +18,17 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
-  const form = useForm<ProductFormValues>({
+  const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: initialData?.name || "",
       category: initialData?.category || "",
       price: initialData?.price || 0,
-      variations: initialData?.variations || [],
+      variations: initialData?.variations.map(({ size, color, stock }) => ({
+        size,
+        color,
+        stock,
+      })) || [],
       image: initialData?.image || "",
       sku: initialData?.sku || "",
     },
@@ -34,10 +38,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
     const productData: Partial<Product> = {
       ...data,
       variations: data.variations.map(variation => ({
-        id: variation.id || crypto.randomUUID(),
-        size: variation.size,
-        color: variation.color,
-        stock: variation.stock,
+        id: crypto.randomUUID(),
+        ...variation,
       })),
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
