@@ -7,18 +7,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/lib/validations/product";
 import { useState, useEffect } from "react";
 import { Image } from "lucide-react";
 
 interface ProductImageFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
 }
 
 const ProductImageField = ({ form }: ProductImageFieldProps) => {
   const [preview, setPreview] = useState<string | null>(null);
 
-  // Update preview when form value changes
   useEffect(() => {
     const currentValue = form.getValues("image");
     if (currentValue) {
