@@ -7,8 +7,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { categories, sizes, colors } from "@/lib/constants";
-import { Search, Filter } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Search, Filter, X } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface ProductFiltersProps {
   searchQuery: string;
@@ -32,37 +32,55 @@ const ProductFilters = ({
   onColorChange,
 }: ProductFiltersProps) => {
   return (
-    <Card className="bg-white">
-      <CardContent className="p-6 space-y-4">
+    <Card className="bg-white border-slate-200 shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold text-slate-900">Filters</CardTitle>
+        <CardDescription className="text-sm text-slate-500">
+          Narrow down products by using the filters below
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
             placeholder="Search by product name or SKU..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 bg-slate-50 border-slate-200"
+            className="pl-9 bg-slate-50 border-slate-200 placeholder:text-slate-400 focus:border-slate-300 focus:ring-slate-300 transition-colors"
           />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchChange("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-500"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
+
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex items-center gap-2 flex-1">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <Select value={selectedCategory} onValueChange={onCategoryChange}>
-              <SelectTrigger className="bg-slate-50 border-slate-200">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="relative flex-1">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              <Select value={selectedCategory} onValueChange={onCategoryChange}>
+                <SelectTrigger className="w-full pl-9 bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+
           <div className="flex-1">
             <Select value={selectedSize} onValueChange={onSizeChange}>
-              <SelectTrigger className="bg-slate-50 border-slate-200">
+              <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
                 <SelectValue placeholder="Size" />
               </SelectTrigger>
               <SelectContent>
@@ -75,9 +93,10 @@ const ProductFilters = ({
               </SelectContent>
             </Select>
           </div>
+
           <div className="flex-1">
             <Select value={selectedColor} onValueChange={onColorChange}>
-              <SelectTrigger className="bg-slate-50 border-slate-200">
+              <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
                 <SelectValue placeholder="Color" />
               </SelectTrigger>
               <SelectContent>
