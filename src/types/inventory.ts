@@ -14,7 +14,3 @@ export interface Product {
   image?: string;
   variations: ProductVariation[];
 }
-
-export type ProductFormValues = Omit<Product, 'id'> & {
-  variations: Array<Omit<ProductVariation, 'id'> & { id?: string }>;
-};

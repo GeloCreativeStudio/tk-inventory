@@ -11,8 +11,6 @@ import { Search, Filter, X, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
 
 interface ProductFiltersProps {
   searchQuery: string;
@@ -23,10 +21,6 @@ interface ProductFiltersProps {
   onSizeChange: (value: string) => void;
   selectedColor: string;
   onColorChange: (value: string) => void;
-  priceRange?: [number, number];
-  onPriceRangeChange?: (value: [number, number]) => void;
-  stockStatus?: 'all' | 'in-stock' | 'low-stock' | 'out-of-stock';
-  onStockStatusChange?: (value: 'all' | 'in-stock' | 'low-stock' | 'out-of-stock') => void;
 }
 
 const ProductFilters = ({
@@ -38,35 +32,17 @@ const ProductFilters = ({
   onSizeChange,
   selectedColor,
   onColorChange,
-  priceRange = [0, 1000],
-  onPriceRangeChange,
-  stockStatus = 'all',
-  onStockStatusChange,
 }: ProductFiltersProps) => {
-  const [localPriceRange, setLocalPriceRange] = useState<[number, number]>(priceRange);
-
   const hasActiveFilters = searchQuery || 
     selectedCategory !== "all" || 
     selectedSize !== "all" || 
-    selectedColor !== "all" ||
-    stockStatus !== "all" ||
-    priceRange[0] !== 0 || 
-    priceRange[1] !== 1000;
+    selectedColor !== "all";
 
   const clearAllFilters = () => {
     onSearchChange("");
     onCategoryChange("all");
     onSizeChange("all");
     onColorChange("all");
-    onStockStatusChange?.("all");
-    onPriceRangeChange?.([0, 1000]);
-    setLocalPriceRange([0, 1000]);
-  };
-
-  const handlePriceRangeChange = (value: number[]) => {
-    const newRange: [number, number] = [value[0], value[1]];
-    setLocalPriceRange(newRange);
-    onPriceRangeChange?.(newRange);
   };
 
   return (
@@ -113,16 +89,6 @@ const ProductFilters = ({
                 Color: {selectedColor}
               </Badge>
             )}
-            {stockStatus !== "all" && (
-              <Badge variant="secondary" className="text-xs">
-                Stock: {stockStatus.replace('-', ' ')}
-              </Badge>
-            )}
-            {(priceRange[0] !== 0 || priceRange[1] !== 1000) && (
-              <Badge variant="secondary" className="text-xs">
-                Price: ${priceRange[0]} - ${priceRange[1]}
-              </Badge>
-            )}
           </div>
         )}
       </CardHeader>
@@ -145,53 +111,19 @@ const ProductFilters = ({
           )}
         </div>
 
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex items-center gap-2 flex-1">
-              <div className="relative flex-1">
-                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-                <Select value={selectedCategory} onValueChange={onCategoryChange}>
-                  <SelectTrigger className="w-full pl-9 bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex-1">
-              <Select value={selectedSize} onValueChange={onSizeChange}>
-                <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
-                  <SelectValue placeholder="Size" />
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex items-center gap-2 flex-1">
+            <div className="relative flex-1">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              <Select value={selectedCategory} onValueChange={onCategoryChange}>
+                <SelectTrigger className="w-full pl-9 bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
+                  <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sizes</SelectItem>
-                  {sizes.map((size) => (
-                    <SelectItem key={size} value={size}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex-1">
-              <Select value={selectedColor} onValueChange={onColorChange}>
-                <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
-                  <SelectValue placeholder="Color" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Colors</SelectItem>
-                  {colors.map((color) => (
-                    <SelectItem key={color} value={color}>
-                      {color}
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -199,34 +131,36 @@ const ProductFilters = ({
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">
-                Price Range (${localPriceRange[0]} - ${localPriceRange[1]})
-              </label>
-              <Slider
-                defaultValue={[0, 1000]}
-                max={1000}
-                step={10}
-                value={localPriceRange}
-                onValueChange={handlePriceRangeChange}
-                className="mt-2"
-              />
-            </div>
+          <div className="flex-1">
+            <Select value={selectedSize} onValueChange={onSizeChange}>
+              <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
+                <SelectValue placeholder="Size" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Sizes</SelectItem>
+                {sizes.map((size) => (
+                  <SelectItem key={size} value={size}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div>
-              <Select value={stockStatus} onValueChange={onStockStatusChange ?? (() => {})}>
-                <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
-                  <SelectValue placeholder="Stock Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Stock Status</SelectItem>
-                  <SelectItem value="in-stock">In Stock</SelectItem>
-                  <SelectItem value="low-stock">Low Stock</SelectItem>
-                  <SelectItem value="out-of-stock">Out of Stock</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="flex-1">
+            <Select value={selectedColor} onValueChange={onColorChange}>
+              <SelectTrigger className="w-full bg-slate-50 border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:ring-slate-300 transition-colors">
+                <SelectValue placeholder="Color" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Colors</SelectItem>
+                {colors.map((color) => (
+                  <SelectItem key={color} value={color}>
+                    {color}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </CardContent>
