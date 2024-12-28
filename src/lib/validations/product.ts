@@ -1,5 +1,5 @@
-import * as z from "zod"
-import { Product } from "@/types/inventory"
+import * as z from "zod";
+import { Product } from "@/types/inventory";
 
 const productVariationSchema = z.object({
   id: z.string(),
