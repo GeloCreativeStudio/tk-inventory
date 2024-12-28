@@ -13,19 +13,22 @@ export const testProducts: Product[] = [
         id: "var-1",
         size: "M",
         color: "Black",
-        stock: 15
+        stock: 15,
+        images: ["public/img_test/001BLACK.jpg"]
       },
       {
         id: "var-2",
         size: "L",
         color: "Black",
-        stock: 10
+        stock: 10,
+        images: ["public/img_test/001BLACK.jpg"]
       },
       {
         id: "var-3",
         size: "M",
         color: "White",
-        stock: 8
+        stock: 8,
+        images: ["public/img_test/001WHITE.jpg"]
       }
     ]
   },
@@ -41,19 +44,22 @@ export const testProducts: Product[] = [
         id: "var-4",
         size: "S",
         color: "Blue",
-        stock: 12
+        stock: 12,
+        images: ["public/img_test/001WHITE.jpg"]
       },
       {
         id: "var-5",
         size: "M",
         color: "Blue",
-        stock: 8
+        stock: 8,
+        images: ["public/img_test/001WHITE.jpg"]
       },
       {
         id: "var-6",
         size: "L",
         color: "Red",
-        stock: 5
+        stock: 5,
+        images: ["public/img_test/001WHITE.jpg"]
       }
     ]
   }

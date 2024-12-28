@@ -3,6 +3,7 @@ export interface ProductVariation {
   size: string;
   color: string;
   stock: number;
+  images: string[];  // Add support for multiple images per variation
 }
 
 export interface Product {
@@ -11,6 +12,6 @@ export interface Product {
   category: string;
   price: number;
   sku?: string;
-  image?: string;
+  image?: string;  // Keep for backward compatibility
   variations: ProductVariation[];
 }

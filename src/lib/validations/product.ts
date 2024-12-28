@@ -6,6 +6,7 @@ const productVariationSchema = z.object({
   size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
   stock: z.number().int().min(0, "Stock must be greater than or equal to 0"),
+  images: z.array(z.string()).default([]),
 });
 
 export const productSchema = z.object({

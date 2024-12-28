@@ -28,6 +28,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
           size: "",
           color: "",
           stock: 0,
+          images: [],
         },
       ],
     },
@@ -41,6 +42,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       variations: data.variations.map(variation => ({
         ...variation,
         id: variation.id || uuidv4(),
+        images: variation.images || [],
       })),
     };
     onSubmit(productData);
