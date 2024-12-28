@@ -17,18 +17,22 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   const [editingIndex, setEditingIndex] = useState(-1);
 
   const addVariation = () => {
-    const currentVariations = form.getValues("variations") || [];
-    form.setValue("variations", [
-      ...currentVariations,
-      {
-        id: uuidv4(),
-        size: "",
-        color: "",
-        stock: 0,
-        images: [],
-      },
-    ]);
-    setEditingIndex(currentVariations.length);
+    const variations = form.getValues("variations") || [];
+    const newVariation = {
+      id: uuidv4(),
+      size: "",
+      color: "",
+      stock: 0,
+      images: [],
+    };
+    
+    form.setValue("variations", [...variations, newVariation], {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+    
+    setEditingIndex(-1);
     setModalOpen(true);
   };
 
@@ -37,7 +41,8 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
     if (currentVariations.length > 1) {
       form.setValue(
         "variations",
-        currentVariations.filter((_, i) => i !== index)
+        currentVariations.filter((_, i) => i !== index),
+        { shouldValidate: true }
       );
     }
   };

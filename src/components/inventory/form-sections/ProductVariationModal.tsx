@@ -31,12 +31,16 @@ const ProductVariationModal = ({
   const { toast } = useToast();
   const isSubmitting = form.formState.isSubmitting;
   const hasErrors = Object.keys(form.formState.errors).length > 0;
+  const isNewVariation = variationIndex === -1;
 
   const handleSave = async () => {
+    const currentVariations = form.getValues("variations");
+    const targetIndex = isNewVariation ? currentVariations.length - 1 : variationIndex;
+
     const isValid = await form.trigger([
-      `variations.${variationIndex}.size`,
-      `variations.${variationIndex}.color`,
-      `variations.${variationIndex}.stock`,
+      `variations.${targetIndex}.size`,
+      `variations.${targetIndex}.color`,
+      `variations.${targetIndex}.stock`,
     ]);
 
     if (!isValid) {
@@ -50,7 +54,7 @@ const ProductVariationModal = ({
 
     toast({
       title: "Success",
-      description: variationIndex === -1 
+      description: isNewVariation 
         ? "New variation added successfully" 
         : "Variation updated successfully",
     });
@@ -62,7 +66,7 @@ const ProductVariationModal = ({
       <DialogContent className="max-h-[90vh] p-0">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>
-            {variationIndex === -1 ? "Add New Variation" : "Edit Variation"}
+            {isNewVariation ? "Add New Variation" : "Edit Variation"}
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-8rem)] px-6 pb-6">
@@ -92,7 +96,7 @@ const ProductVariationModal = ({
                 {isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {variationIndex === -1 ? "Add Variation" : "Save Changes"}
+                {isNewVariation ? "Add Variation" : "Save Changes"}
               </Button>
             </div>
           </div>
