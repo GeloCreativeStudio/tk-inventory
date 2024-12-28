@@ -30,7 +30,7 @@ const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <FormLabel>Product Variations</FormLabel>
+        <FormLabel className="text-base">Product Variations</FormLabel>
         <Button
           type="button"
           variant="outline"
@@ -52,7 +52,7 @@ const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {
               {fields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="flex items-start space-x-4 rounded-lg border p-4"
+                  className="flex items-start space-x-4 rounded-lg border p-4 shadow-sm"
                 >
                   <div className="grid flex-1 gap-4 md:grid-cols-3">
                     <ProductSizeField
@@ -73,7 +73,7 @@ const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {
                     variant="ghost"
                     size="icon"
                     onClick={() => remove(index)}
-                    className="h-8 w-8"
+                    className="h-8 w-8 flex-shrink-0"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

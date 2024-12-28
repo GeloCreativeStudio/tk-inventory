@@ -44,16 +44,27 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <ProductNameField form={form} />
-        <ProductCategoryField form={form} />
-        <ProductPriceField form={form} />
-        <ProductVariationsField form={form} />
-        <ProductImageField form={form} />
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <ProductNameField form={form} />
+            <ProductCategoryField form={form} />
+            <ProductPriceField form={form} />
+          </div>
+          <div>
+            <ProductImageField form={form} />
+          </div>
+        </div>
+        
+        <div className="pt-4 border-t">
+          <ProductVariationsField form={form} />
+        </div>
 
-        <Button type="submit" className="w-full">
-          {mode === "create" ? "Add Product" : "Update Product"}
-        </Button>
+        <div className="pt-6 border-t">
+          <Button type="submit" className="w-full">
+            {mode === "create" ? "Add Product" : "Update Product"}
+          </Button>
+        </div>
       </form>
     </Form>
   );
