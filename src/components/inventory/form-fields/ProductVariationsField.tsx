@@ -1,7 +1,7 @@
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/lib/validations/product";
 import { Plus, Trash2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import ProductSizeField from "./ProductSizeField";
@@ -9,7 +9,7 @@ import ProductColorField from "./ProductColorField";
 import ProductStockField from "./ProductStockField";
 
 interface ProductVariationsFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
 }
 
 const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {

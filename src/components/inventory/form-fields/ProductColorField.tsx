@@ -13,12 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/types/inventory";
+import { ProductFormValues } from "@/lib/validations/product";
 import { colors } from "@/lib/constants";
 
 interface ProductColorFieldProps {
   form: UseFormReturn<ProductFormValues>;
-  name: string;
+  name: `variations.${number}.color`;
 }
 
 const ProductColorField = ({ form, name }: ProductColorFieldProps) => {
@@ -29,7 +29,7 @@ const ProductColorField = ({ form, name }: ProductColorFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Color</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select color" />

@@ -13,12 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/types/inventory";
+import { ProductFormValues } from "@/lib/validations/product";
 import { sizes } from "@/lib/constants";
 
 interface ProductSizeFieldProps {
   form: UseFormReturn<ProductFormValues>;
-  name: string;
+  name: `variations.${number}.size`;
 }
 
 const ProductSizeField = ({ form, name }: ProductSizeFieldProps) => {
@@ -29,7 +29,7 @@ const ProductSizeField = ({ form, name }: ProductSizeFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Size</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select size" />

@@ -12,7 +12,7 @@ import ProductImageField from "./form-fields/ProductImageField";
 import ProductVariationsField from "./form-fields/ProductVariationsField";
 
 interface ProductFormProps {
-  onSubmit: (data: Partial<Product>) => void;
+  onSubmit: (data: Product) => void;
   initialData?: Product;
   mode?: "create" | "edit";
 }
@@ -35,9 +35,10 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   });
 
   const handleSubmit = (data: ProductFormValues) => {
-    const productData = {
+    const productData: Product = {
       ...data,
-      sku: mode === "create" ? generateSKU(data) : initialData?.sku,
+      id: initialData?.id || uuidv4(),
+      sku: mode === "create" ? generateSKU(data) : initialData?.sku || "",
     };
     onSubmit(productData);
   };
