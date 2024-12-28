@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/lib/validations/product";
+import { Product } from "@/types/inventory";
 
 interface ProductNameFieldProps {
-  form: UseFormReturn<ProductFormValues>;
+  form: UseFormReturn<Partial<Product>>;
 }
 
 const ProductNameField = ({ form }: ProductNameFieldProps) => {

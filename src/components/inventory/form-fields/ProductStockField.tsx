@@ -7,18 +7,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/lib/validations/product";
+import { Product } from "@/types/inventory";
 
 interface ProductStockFieldProps {
-  form: UseFormReturn<ProductFormValues>;
-  name: `variations.${number}.stock`;
+  form: UseFormReturn<Partial<Product>>;
 }
 
-const ProductStockField = ({ form, name }: ProductStockFieldProps) => {
+const ProductStockField = ({ form }: ProductStockFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name={name}
+      name="stock"
       render={({ field }) => (
         <FormItem>
           <FormLabel>Stock</FormLabel>
@@ -26,7 +25,7 @@ const ProductStockField = ({ form, name }: ProductStockFieldProps) => {
             <Input 
               type="number"
               {...field}
-              onChange={(e) => field.onChange(Number(e.target.value))}
+              onChange={(e) => field.onChange(e.target.valueAsNumber)}
             />
           </FormControl>
           <FormMessage />

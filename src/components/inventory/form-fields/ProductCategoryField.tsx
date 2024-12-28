@@ -13,11 +13,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "@/lib/validations/product";
+import { Product } from "@/types/inventory";
 import { categories } from "@/lib/constants";
 
 interface ProductCategoryFieldProps {
-  form: UseFormReturn<ProductFormValues>;
+  form: UseFormReturn<Partial<Product>>;
 }
 
 const ProductCategoryField = ({ form }: ProductCategoryFieldProps) => {

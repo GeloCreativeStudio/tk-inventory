@@ -18,8 +18,6 @@ interface ProductViewDialogProps {
 const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   if (!product) return null;
 
-  const mainVariation = product.variations[0] || { size: 'N/A', color: 'N/A', stock: 0 };
-
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
@@ -56,7 +54,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               <div className="text-3xl font-bold text-accent">
                 {formatCurrency(product.price)}
               </div>
-              <StockBadge stock={mainVariation.stock} />
+              <StockBadge stock={product.stock} />
             </div>
 
             <div className="space-y-4">
@@ -68,11 +66,11 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Size</div>
-                  <Badge variant="outline">{mainVariation.size}</Badge>
+                  <Badge variant="outline">{product.size}</Badge>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Color</div>
-                  <Badge variant="outline">{mainVariation.color}</Badge>
+                  <Badge variant="outline">{product.color}</Badge>
                 </div>
               </div>
             </div>
