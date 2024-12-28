@@ -29,9 +29,8 @@ const StockBadge = ({ stock, isVariationSelected }: StockBadgeProps) => {
     <Badge 
       variant="secondary"
       className={cn(
-        "font-medium transition-all duration-200",
-        badgeStyles[status],
-        isVariationSelected && "ring-2 ring-primary ring-offset-2"
+        "font-medium",
+        badgeStyles[status]
       )}
     >
       {stockText}
