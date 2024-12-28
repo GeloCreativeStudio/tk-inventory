@@ -32,7 +32,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
       shouldTouch: true,
     });
     
-    setEditingIndex(-1);
+    setEditingIndex(variations.length);
     setModalOpen(true);
   };
 
@@ -67,7 +67,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
           type="button"
           variant="outline"
           size="sm"
-          onClick={addVariation}
+          onClick={() => addVariation()}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
