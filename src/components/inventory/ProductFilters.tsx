@@ -60,7 +60,7 @@ const ProductFilters = ({
               variant="outline"
               size="sm"
               onClick={clearAllFilters}
-              className="h-8 text-slate-600 hover:text-slate-900"
+              className="h-8 text-slate-600 hover:text-white hover:bg-slate-900"
             >
               <RefreshCw className="mr-2 h-3 w-3" />
               Clear Filters
