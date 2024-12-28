@@ -15,6 +15,22 @@ const ProductVariationsTable = ({
   onEdit, 
   onDelete 
 }: ProductVariationsTableProps) => {
+  // Check if variations exist and have valid data
+  const hasValidVariations = variations.some(v => v.size || v.color || v.stock > 0 || v.images.length > 0);
+
+  if (!hasValidVariations) {
+    return (
+      <div className="border rounded-lg p-8">
+        <div className="text-center space-y-3">
+          <p className="text-muted-foreground">No variations added yet</p>
+          <p className="text-sm text-muted-foreground">
+            Add your first product variation by clicking the "Add Variation" button above
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="border rounded-lg overflow-hidden">
       <Table>
@@ -30,8 +46,8 @@ const ProductVariationsTable = ({
         <TableBody>
           {variations.map((variation, index) => (
             <TableRow key={variation.id}>
-              <TableCell>{variation.size}</TableCell>
-              <TableCell>{variation.color}</TableCell>
+              <TableCell>{variation.size || "-"}</TableCell>
+              <TableCell>{variation.color || "-"}</TableCell>
               <TableCell>
                 <StockBadge stock={variation.stock} />
               </TableCell>
