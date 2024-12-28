@@ -60,7 +60,7 @@ const ProductVariationsTable = ({
                     variant="ghost"
                     size="icon"
                     onClick={() => onEdit(index)}
-                    className="h-8 w-8 text-muted-foreground hover:text-primary"
+                    className="h-8 w-8 text-slate-600 hover:text-white hover:bg-slate-900"
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -69,7 +69,7 @@ const ProductVariationsTable = ({
                     variant="ghost"
                     size="icon"
                     onClick={() => onDelete(index)}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                    className="h-8 w-8 text-slate-600 hover:text-red-600"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
