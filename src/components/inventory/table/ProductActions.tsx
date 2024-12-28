@@ -16,7 +16,7 @@ const ProductActions = ({ product, onView, onEdit, onDelete }: ProductActionsPro
         variant="ghost"
         size="icon"
         onClick={() => onView(product)}
-        className="h-8 w-8 text-slate-600 hover:text-slate-900"
+        className="h-8 w-8 text-slate-600 hover:text-white hover:bg-slate-900"
       >
         <Eye className="h-4 w-4" />
       </Button>
@@ -25,7 +25,7 @@ const ProductActions = ({ product, onView, onEdit, onDelete }: ProductActionsPro
           variant="ghost"
           size="icon"
           onClick={() => onEdit(product)}
-          className="h-8 w-8 text-slate-600 hover:text-slate-900"
+          className="h-8 w-8 text-slate-600 hover:text-white hover:bg-slate-900"
         >
           <Pencil className="h-4 w-4" />
         </Button>
