@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import StockBadge from "../table/StockBadge";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface ProductVariationMatrixProps {
   product: Product;
@@ -48,7 +49,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
         </Badge>
       </div>
       <div className="border rounded-lg">
-        <div className="overflow-x-auto">
+        <ScrollArea className="w-full whitespace-nowrap rounded-lg">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50 whitespace-nowrap">
@@ -126,7 +127,8 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
               </TableRow>
             </TableBody>
           </Table>
-        </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </div>
   );
