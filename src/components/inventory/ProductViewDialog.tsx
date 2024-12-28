@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Image } from "lucide-react";
 import StockBadge from "./table/StockBadge";
 import { formatCurrency } from "@/lib/utils/currency";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface ProductViewDialogProps {
   product: Product | null;
@@ -54,7 +55,6 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               <div className="text-3xl font-bold text-accent">
                 {formatCurrency(product.price)}
               </div>
-              <StockBadge stock={product.stock} />
             </div>
 
             <div className="space-y-4">
@@ -62,19 +62,32 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
                 <div className="text-sm font-medium">Category</div>
                 <Badge variant="secondary">{product.category}</Badge>
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Size</div>
-                  <Badge variant="outline">{product.size}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Color</div>
-                  <Badge variant="outline">{product.color}</Badge>
-                </div>
-              </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-4">Product Variations</h3>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Size</TableHead>
+                <TableHead>Color</TableHead>
+                <TableHead>Stock</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {product.variations.map((variation) => (
+                <TableRow key={variation.id}>
+                  <TableCell>{variation.size}</TableCell>
+                  <TableCell>{variation.color}</TableCell>
+                  <TableCell>
+                    <StockBadge stock={variation.stock} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </DialogContent>
     </Dialog>

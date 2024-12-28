@@ -63,9 +63,11 @@ const ProductTable = ({
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>{product.category}</TableCell>
               <TableCell className="text-accent font-medium">{formatCurrency(product.price)}</TableCell>
-              <TableCell><StockBadge stock={product.stock} /></TableCell>
-              <TableCell>{product.size}</TableCell>
-              <TableCell>{product.color}</TableCell>
+              <TableCell>
+                <StockBadge stock={product.variations[0]?.stock || 0} />
+              </TableCell>
+              <TableCell>{product.variations[0]?.size || '-'}</TableCell>
+              <TableCell>{product.variations[0]?.color || '-'}</TableCell>
               <TableCell className="text-right">
                 <ProductActions 
                   product={product}
