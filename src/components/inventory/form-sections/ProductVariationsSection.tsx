@@ -6,6 +6,7 @@ import ProductSizeField from "../form-fields/ProductSizeField";
 import ProductColorField from "../form-fields/ProductColorField";
 import ProductStockField from "../form-fields/ProductStockField";
 import { v4 as uuidv4 } from "uuid";
+import { Separator } from "@/components/ui/separator";
 
 interface ProductVariationsSectionProps {
   form: UseFormReturn<ProductFormValues>;
@@ -37,6 +38,8 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
 
   return (
     <div className="space-y-6">
+      <Separator className="my-6" />
+      
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground">Product Variations</h3>
         <Button
@@ -51,11 +54,11 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         </Button>
       </div>
 
-      <div className="space-y-4">
+      <div className="grid gap-4">
         {form.watch("variations")?.map((variation, index) => (
           <div
             key={variation.id}
-            className="rounded-lg border bg-card p-4 shadow-sm relative"
+            className="relative rounded-lg border bg-card p-4 shadow-sm"
           >
             {form.watch("variations")?.length > 1 && (
               <Button
@@ -69,11 +72,9 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
               </Button>
             )}
 
-            <div className="grid gap-6">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ProductSizeField form={form} index={index} />
-                <ProductColorField form={form} index={index} />
-              </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <ProductSizeField form={form} index={index} />
+              <ProductColorField form={form} index={index} />
               <ProductStockField form={form} index={index} />
             </div>
           </div>
