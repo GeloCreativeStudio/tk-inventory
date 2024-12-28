@@ -19,12 +19,13 @@ interface ProductFormProps {
 const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProps) => {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: initialData || {
-      name: "",
-      category: "",
-      price: 0,
-      variations: [],
-      image: "",
+    defaultValues: {
+      name: initialData?.name || "",
+      category: initialData?.category || "",
+      price: initialData?.price || 0,
+      variations: initialData?.variations || [],
+      image: initialData?.image || "",
+      sku: initialData?.sku,
     },
   });
 
