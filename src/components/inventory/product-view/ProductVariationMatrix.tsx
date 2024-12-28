@@ -2,6 +2,7 @@ import { Product } from "@/types/inventory";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import StockBadge from "../table/StockBadge";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductVariationMatrixProps {
   product: Product;
@@ -42,9 +43,9 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Variation Availability Matrix</h3>
-        <div className="text-sm text-muted-foreground">
-          Total Stock: <span className="font-semibold text-foreground">{overallTotal}</span>
-        </div>
+        <Badge variant="secondary" className="bg-accent/10 text-accent hover:bg-accent/20">
+          Total Stock: {overallTotal}
+        </Badge>
       </div>
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
@@ -66,7 +67,7 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                     {color}
                   </TableHead>
                 ))}
-                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-muted/70">
+                <TableHead className="text-center font-semibold text-foreground min-w-[100px] bg-secondary/5">
                   Total
                 </TableHead>
               </TableRow>
@@ -98,23 +99,29 @@ const ProductVariationMatrix = ({ product }: ProductVariationMatrixProps) => {
                       </TableCell>
                     );
                   })}
-                  <TableCell className="text-center font-medium bg-muted/20 p-2">
-                    {rowTotals.get(size)}
+                  <TableCell className="text-center font-medium bg-secondary/5 p-2">
+                    <Badge variant="outline" className="bg-secondary/10">
+                      {rowTotals.get(size)}
+                    </Badge>
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-muted/10 font-medium hover:bg-muted/20">
+              <TableRow className="bg-secondary/5 font-medium hover:bg-secondary/10">
                 <TableCell className="border-r">Total</TableCell>
                 {colors.map(color => (
                   <TableCell 
-                    key={color}
+                    key={`total-${color}`}
                     className="text-center border-r p-2"
                   >
-                    {columnTotals.get(color)}
+                    <Badge variant="outline" className="bg-secondary/10">
+                      {columnTotals.get(color)}
+                    </Badge>
                   </TableCell>
                 ))}
-                <TableCell className="text-center bg-muted/30 font-semibold p-2">
-                  {overallTotal}
+                <TableCell className="text-center bg-accent/10 p-2">
+                  <Badge variant="secondary" className="bg-accent text-accent-foreground">
+                    {overallTotal}
+                  </Badge>
                 </TableCell>
               </TableRow>
             </TableBody>
