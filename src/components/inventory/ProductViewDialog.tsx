@@ -25,14 +25,13 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   const [availableColors, setAvailableColors] = useState<string[]>([]);
   const [availableSizes, setAvailableSizes] = useState<string[]>([]);
 
-  if (!product) return null;
-
   // Get unique sizes and colors from variations
-  const sizes = [...new Set(product.variations.map(v => v.size))];
-  const colors = [...new Set(product.variations.map(v => v.color))];
+  const sizes = product ? [...new Set(product.variations.map(v => v.size))] : [];
+  const colors = product ? [...new Set(product.variations.map(v => v.color))] : [];
 
   // Update available colors when size changes
   const handleSizeSelect = (size: string) => {
+    if (!product) return;
     setSelectedSize(size);
     const colorsForSize = product.variations
       .filter(v => v.size === size)
@@ -47,6 +46,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
 
   // Update available sizes when color changes
   const handleColorSelect = (color: string) => {
+    if (!product) return;
     setSelectedColor(color);
     const sizesForColor = product.variations
       .filter(v => v.color === color)
@@ -65,7 +65,9 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
       setAvailableColors(colors);
       setAvailableSizes(sizes);
     }
-  }, [product]);
+  }, [product, colors, sizes]);
+
+  if (!product) return null;
 
   // Find the selected variation based on size and color
   const selectedVariation = product.variations.find(

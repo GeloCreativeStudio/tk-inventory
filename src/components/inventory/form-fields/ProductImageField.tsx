@@ -7,24 +7,26 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { Product } from "@/types/inventory";
+import { ProductFormValues } from "@/lib/validations/product";
 import { useState, useEffect } from "react";
 import { Image } from "lucide-react";
 
 interface ProductImageFieldProps {
-  form: UseFormReturn<Partial<Product>>;
+  form: UseFormReturn<ProductFormValues>;
+  index?: number;
 }
 
-const ProductImageField = ({ form }: ProductImageFieldProps) => {
+const ProductImageField = ({ form, index }: ProductImageFieldProps) => {
   const [preview, setPreview] = useState<string | null>(null);
+  const fieldName = index !== undefined ? `variations.${index}.images.0` : 'variations.0.images.0';
 
   // Update preview when form value changes
   useEffect(() => {
-    const currentValue = form.getValues("image");
+    const currentValue = form.getValues(fieldName);
     if (currentValue) {
       setPreview(currentValue);
     }
-  }, [form]);
+  }, [form, fieldName]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -33,7 +35,7 @@ const ProductImageField = ({ form }: ProductImageFieldProps) => {
       reader.onloadend = () => {
         const result = reader.result as string;
         setPreview(result);
-        form.setValue("image", result);
+        form.setValue(fieldName, result);
       };
       reader.readAsDataURL(file);
     }
@@ -42,7 +44,7 @@ const ProductImageField = ({ form }: ProductImageFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name="image"
+      name={fieldName}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Product Image</FormLabel>
