@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -31,12 +32,16 @@ const ProductVariationModal = ({
   const { toast } = useToast();
   const isSubmitting = form.formState.isSubmitting;
   const hasErrors = Object.keys(form.formState.errors).length > 0;
+  const isNewVariation = variationIndex === -1;
 
   const handleSave = async () => {
+    const currentVariations = form.getValues("variations");
+    const targetIndex = isNewVariation ? currentVariations.length - 1 : variationIndex;
+
     const isValid = await form.trigger([
-      `variations.${variationIndex}.size`,
-      `variations.${variationIndex}.color`,
-      `variations.${variationIndex}.stock`,
+      `variations.${targetIndex}.size`,
+      `variations.${targetIndex}.color`,
+      `variations.${targetIndex}.stock`,
     ]);
 
     if (!isValid) {
@@ -48,9 +53,26 @@ const ProductVariationModal = ({
       return;
     }
 
+    // Check for duplicate variations
+    const newVariation = currentVariations[targetIndex];
+    const isDuplicate = currentVariations.some((variation, index) => 
+      index !== targetIndex && 
+      variation.size === newVariation.size && 
+      variation.color === newVariation.color
+    );
+
+    if (isDuplicate) {
+      toast({
+        title: "Duplicate Variation",
+        description: "A variation with this size and color combination already exists.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
       title: "Success",
-      description: variationIndex === -1 
+      description: isNewVariation 
         ? "New variation added successfully" 
         : "Variation updated successfully",
     });
@@ -62,8 +84,13 @@ const ProductVariationModal = ({
       <DialogContent className="max-h-[90vh] p-0">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>
-            {variationIndex === -1 ? "Add New Variation" : "Edit Variation"}
+            {isNewVariation ? "Add New Variation" : "Edit Variation"}
           </DialogTitle>
+          <DialogDescription>
+            {isNewVariation 
+              ? "Add a new variation with unique size and color combination" 
+              : "Modify the existing variation details"}
+          </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-8rem)] px-6 pb-6">
           <div className="space-y-6">
@@ -92,7 +119,7 @@ const ProductVariationModal = ({
                 {isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {variationIndex === -1 ? "Add Variation" : "Save Changes"}
+                {isNewVariation ? "Add Variation" : "Save Changes"}
               </Button>
             </div>
           </div>
