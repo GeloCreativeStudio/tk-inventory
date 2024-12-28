@@ -114,7 +114,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] p-0 max-w-[95vw] w-full lg:max-w-[1000px]">
-        <DialogHeader className="px-8 pt-8">
+        <DialogHeader className="px-6 pt-6">
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <Package2 className="w-6 h-6" />
             Product Details
@@ -125,7 +125,7 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
         </DialogHeader>
         
         <ScrollArea className="max-h-[calc(90vh-8rem)]">
-          <div className="flex flex-col gap-6 p-8">
+          <div className="flex flex-col gap-6 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ProductImageSection
                 images={currentImages}
