@@ -8,11 +8,10 @@ import ProductFilters from "@/components/inventory/ProductFilters";
 import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import InventoryHeader from "@/components/inventory/InventoryHeader";
 import InventoryDialogs from "@/components/inventory/InventoryDialogs";
-import { testProducts } from "@/data/testProducts";
 import { Dialog } from "@/components/ui/dialog";
 
 const Inventory = () => {
-  const [products, setProducts] = useState<Product[]>(testProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
