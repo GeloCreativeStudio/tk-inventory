@@ -64,28 +64,28 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
         </DialogHeader>
         
         <ScrollArea className="max-h-[calc(90vh-8rem)]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-            <ProductImageSection
-              images={currentImages}
-              currentImageIndex={currentImageIndex}
-              setCurrentImageIndex={setCurrentImageIndex}
-            />
-            
-            <div className="space-y-6">
+          <div className="flex flex-col gap-6 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ProductImageSection
+                images={currentImages}
+                currentImageIndex={currentImageIndex}
+                setCurrentImageIndex={setCurrentImageIndex}
+              />
+              
               <ProductInfoSection
                 product={product}
                 currentStock={getCurrentStock()}
               />
-              
-              <ProductVariationSection
-                sizes={sizes}
-                colors={colors}
-                selectedSize={selectedSize}
-                selectedColor={selectedColor}
-                onSizeSelect={setSelectedSize}
-                onColorSelect={setSelectedColor}
-              />
             </div>
+            
+            <ProductVariationSection
+              sizes={sizes}
+              colors={colors}
+              selectedSize={selectedSize}
+              selectedColor={selectedColor}
+              onSizeSelect={setSelectedSize}
+              onColorSelect={setSelectedColor}
+            />
           </div>
         </ScrollArea>
       </DialogContent>
