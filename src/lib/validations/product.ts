@@ -1,11 +1,10 @@
 import * as z from "zod";
-import { Product } from "@/types/inventory";
 
 const productVariationSchema = z.object({
-  id: z.string().default(() => crypto.randomUUID()),
+  id: z.string().optional(),
   size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
-  stock: z.number().int().min(0, "Stock must be greater than or equal to 0"),
+  stock: z.number().min(0, "Stock must be greater than or equal to 0"),
 });
 
 export const productSchema = z.object({
