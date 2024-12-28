@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
 import { sizes, colors } from "@/lib/constants";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ProductVariationsFieldProps {
   form: UseFormReturn<ProductFormValues>;
@@ -74,84 +75,93 @@ const ProductVariationsField = ({ form }: ProductVariationsFieldProps) => {
       name="variations"
       render={() => (
         <FormItem className="space-y-4">
-          <FormLabel>Product Variations</FormLabel>
-          
-          <div className="flex gap-4 items-end">
-            <Select value={newSize} onValueChange={setNewSize}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Size" />
-              </SelectTrigger>
-              <SelectContent>
-                {sizes.map((size) => (
-                  <SelectItem key={size} value={size}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex flex-wrap gap-4 items-end mb-4">
+            <div className="space-y-2">
+              <FormLabel>Size</FormLabel>
+              <Select value={newSize} onValueChange={setNewSize}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Size" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sizes.map((size) => (
+                    <SelectItem key={size} value={size}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-            <Select value={newColor} onValueChange={setNewColor}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Color" />
-              </SelectTrigger>
-              <SelectContent>
-                {colors.map((color) => (
-                  <SelectItem key={color} value={color}>
-                    {color}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-2">
+              <FormLabel>Color</FormLabel>
+              <Select value={newColor} onValueChange={setNewColor}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Color" />
+                </SelectTrigger>
+                <SelectContent>
+                  {colors.map((color) => (
+                    <SelectItem key={color} value={color}>
+                      {color}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-            <Input
-              type="number"
-              placeholder="Stock"
-              className="w-[120px]"
-              value={newStock}
-              onChange={(e) => setNewStock(parseInt(e.target.value) || 0)}
-              min={0}
-            />
+            <div className="space-y-2">
+              <FormLabel>Stock</FormLabel>
+              <Input
+                type="number"
+                className="w-[120px]"
+                value={newStock}
+                onChange={(e) => setNewStock(parseInt(e.target.value) || 0)}
+                min={0}
+              />
+            </div>
 
             <Button 
               type="button" 
               variant="secondary"
               onClick={handleAddVariation}
+              className="mt-2"
             >
               Add Variation
             </Button>
           </div>
 
           {variations.length > 0 && (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Size</TableHead>
-                  <TableHead>Color</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead className="w-[100px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {variations.map((variation) => (
-                  <TableRow key={variation.id}>
-                    <TableCell>{variation.size}</TableCell>
-                    <TableCell>{variation.color}</TableCell>
-                    <TableCell>{variation.stock}</TableCell>
-                    <TableCell>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemoveVariation(variation.id)}
-                        className="h-8 w-8 text-slate-600 hover:text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
+            <ScrollArea className="h-[200px] w-full rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Size</TableHead>
+                    <TableHead>Color</TableHead>
+                    <TableHead>Stock</TableHead>
+                    <TableHead className="w-[100px]">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {variations.map((variation) => (
+                    <TableRow key={variation.id}>
+                      <TableCell>{variation.size}</TableCell>
+                      <TableCell>{variation.color}</TableCell>
+                      <TableCell>{variation.stock}</TableCell>
+                      <TableCell>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveVariation(variation.id)}
+                          className="h-8 w-8 text-slate-600 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
           )}
           <FormMessage />
         </FormItem>
