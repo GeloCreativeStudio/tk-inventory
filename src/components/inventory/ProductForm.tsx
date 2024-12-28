@@ -32,6 +32,10 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   const handleSubmit = (data: ProductFormValues) => {
     const productData: Partial<Product> = {
       ...data,
+      variations: data.variations.map(variation => ({
+        ...variation,
+        id: variation.id || crypto.randomUUID(),
+      })),
       sku: mode === "create" ? generateSKU(data) : initialData?.sku,
     };
     onSubmit(productData);
