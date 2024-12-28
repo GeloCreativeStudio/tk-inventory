@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +9,7 @@ import ProductViewDialog from "@/components/inventory/ProductViewDialog";
 import InventoryHeader from "@/components/inventory/InventoryHeader";
 import InventoryDialogs from "@/components/inventory/InventoryDialogs";
 import { testProducts } from "@/data/testProducts";
-import { DialogProvider } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 
 const Inventory = () => {
   const [products, setProducts] = useState<Product[]>(testProducts);
@@ -25,20 +25,6 @@ const Inventory = () => {
   const { user } = useAuth();
 
   const isAdmin = user?.role === 'admin';
-
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const searchLower = searchQuery.toLowerCase();
-      const matchesSearch = 
-        product.name.toLowerCase().includes(searchLower) ||
-        (product.sku?.toLowerCase().includes(searchLower) || false);
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-      const matchesSize = selectedSize === "all" || product.size === selectedSize;
-      const matchesColor = selectedColor === "all" || product.color === selectedColor;
-
-      return matchesSearch && matchesCategory && matchesSize && matchesColor;
-    });
-  }, [products, searchQuery, selectedCategory, selectedSize, selectedColor]);
 
   const handleAddProduct = (data: Partial<Product>) => {
     if (!isAdmin) {
@@ -114,7 +100,7 @@ const Inventory = () => {
   return (
     <Layout>
       <div className="space-y-8">
-        <DialogProvider>
+        <Dialog open={open} onOpenChange={setOpen}>
           <InventoryHeader setOpen={setOpen} />
 
           <ProductFilters
@@ -129,7 +115,7 @@ const Inventory = () => {
           />
 
           <ProductTable
-            products={filteredProducts}
+            products={products}
             onView={setViewProduct}
             onEdit={isAdmin ? setEditProduct : undefined}
             onDelete={isAdmin ? setDeleteProduct : undefined}
@@ -151,7 +137,7 @@ const Inventory = () => {
             product={viewProduct} 
             onClose={() => setViewProduct(null)} 
           />
-        </DialogProvider>
+        </Dialog>
       </div>
     </Layout>
   );
