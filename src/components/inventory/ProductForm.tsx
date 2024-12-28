@@ -7,10 +7,8 @@ import { productSchema, ProductFormValues, generateSKU } from "@/lib/validations
 import ProductNameField from "./form-fields/ProductNameField";
 import ProductCategoryField from "./form-fields/ProductCategoryField";
 import ProductPriceField from "./form-fields/ProductPriceField";
-import ProductStockField from "./form-fields/ProductStockField";
-import ProductSizeField from "./form-fields/ProductSizeField";
-import ProductColorField from "./form-fields/ProductColorField";
 import ProductImageField from "./form-fields/ProductImageField";
+import ProductVariationsField from "./form-fields/ProductVariationsField";
 
 interface ProductFormProps {
   onSubmit: (data: Partial<Product>) => void;
@@ -25,9 +23,7 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       name: "",
       category: "",
       price: 0,
-      stock: 0,
-      size: "",
-      color: "",
+      variations: [],
       image: "",
     },
   });
@@ -45,17 +41,8 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <ProductNameField form={form} />
         <ProductCategoryField form={form} />
-        
-        <div className="grid grid-cols-2 gap-4">
-          <ProductPriceField form={form} />
-          <ProductStockField form={form} />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <ProductSizeField form={form} />
-          <ProductColorField form={form} />
-        </div>
-
+        <ProductPriceField form={form} />
+        <ProductVariationsField form={form} />
         <ProductImageField form={form} />
 
         <Button type="submit">
