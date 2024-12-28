@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import ProductImageSection from "./product-view/ProductImageSection";
 import ProductInfoSection from "./product-view/ProductInfoSection";
 import ProductVariationSection from "./product-view/ProductVariationSection";
+import ProductVariationMatrix from "./product-view/ProductVariationMatrix";
 
 interface ProductViewDialogProps {
   product: Product | null;
@@ -110,8 +111,6 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
     return getTotalStock(product!);
   };
 
-  if (!product) return null;
-
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] p-0">
@@ -152,6 +151,8 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
               availableColors={availableColors}
               availableSizes={availableSizes}
             />
+
+            <ProductVariationMatrix product={product} />
           </div>
         </ScrollArea>
       </DialogContent>
