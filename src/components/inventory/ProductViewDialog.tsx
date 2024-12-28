@@ -38,20 +38,8 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
       .filter(v => v.size === size)
       .map(v => v.color);
     
-    // Only allow deselection if there are available variations
-    if (size === selectedSize && colorsForSize.length > 0) {
-      setSelectedSize("");
-      setAvailableColors(colors);
-      return;
-    }
-    
     setSelectedSize(size);
     setAvailableColors(colorsForSize);
-    
-    // Reset color if current selection is not available for new size
-    if (!colorsForSize.includes(selectedColor)) {
-      setSelectedColor("");
-    }
   };
 
   // Update available sizes when color changes
@@ -63,20 +51,8 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
       .filter(v => v.color === color)
       .map(v => v.size);
     
-    // Only allow deselection if there are available variations
-    if (color === selectedColor && sizesForColor.length > 0) {
-      setSelectedColor("");
-      setAvailableSizes(sizes);
-      return;
-    }
-    
     setSelectedColor(color);
     setAvailableSizes(sizesForColor);
-    
-    // Reset size if current selection is not available for new color
-    if (!sizesForColor.includes(selectedSize)) {
-      setSelectedSize("");
-    }
   };
 
   // Initialize available variations on component mount
@@ -109,8 +85,6 @@ const ProductViewDialog = ({ product, onClose }: ProductViewDialogProps) => {
     }
     return getTotalStock(product!);
   };
-
-  if (!product) return null;
 
   return (
     <Dialog open={!!product} onOpenChange={onClose}>

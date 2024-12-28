@@ -28,14 +28,7 @@ const ProductVariationSection = ({
       
       <div className="space-y-6">
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
-            Select Size
-            {selectedSize && (
-              <span className="text-xs text-muted-foreground">
-                (Click again to deselect)
-              </span>
-            )}
-          </h3>
+          <h3 className="text-sm font-medium text-foreground">Select Size</h3>
           <div className="flex flex-wrap gap-2">
             {sizes.map((size) => (
               <Button
@@ -44,7 +37,7 @@ const ProductVariationSection = ({
                 size="sm"
                 onClick={() => onSizeSelect(size)}
                 disabled={!availableSizes.includes(size)}
-                className={`${!availableSizes.includes(size) ? "opacity-50" : ""}`}
+                className="min-w-[60px]"
               >
                 {size}
               </Button>
@@ -53,14 +46,7 @@ const ProductVariationSection = ({
         </div>
 
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
-            Select Color
-            {selectedColor && (
-              <span className="text-xs text-muted-foreground">
-                (Click again to deselect)
-              </span>
-            )}
-          </h3>
+          <h3 className="text-sm font-medium text-foreground">Select Color</h3>
           <div className="flex flex-wrap gap-2">
             {colors.map((color) => (
               <Button
@@ -69,7 +55,7 @@ const ProductVariationSection = ({
                 size="sm"
                 onClick={() => onColorSelect(color)}
                 disabled={!availableColors.includes(color)}
-                className={`${!availableColors.includes(color) ? "opacity-50" : ""}`}
+                className="min-w-[60px]"
               >
                 {color}
               </Button>
