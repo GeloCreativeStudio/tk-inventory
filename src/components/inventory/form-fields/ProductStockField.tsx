@@ -28,8 +28,8 @@ const ProductStockField = ({ form, index }: ProductStockFieldProps) => {
             <Input 
               type="number"
               {...field}
+              onChange={(e) => field.onChange(Number(e.target.value))}
               value={field.value || 0}
-              onChange={(e) => field.onChange(e.target.valueAsNumber)}
             />
           </FormControl>
           <FormMessage />

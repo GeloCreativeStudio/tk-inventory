@@ -31,7 +31,7 @@ const ProductColorField = ({ form, index }: ProductColorFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Color</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
+          <Select onValueChange={field.onChange} value={field.value?.toString() || ""}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select color" />

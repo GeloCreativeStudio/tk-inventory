@@ -31,7 +31,7 @@ const ProductSizeField = ({ form, index }: ProductSizeFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Size</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
+          <Select onValueChange={field.onChange} value={field.value?.toString() || ""}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select size" />
