@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,23 @@ const ProductVariationModal = ({
       return;
     }
 
+    // Check for duplicate variations
+    const newVariation = currentVariations[targetIndex];
+    const isDuplicate = currentVariations.some((variation, index) => 
+      index !== targetIndex && 
+      variation.size === newVariation.size && 
+      variation.color === newVariation.color
+    );
+
+    if (isDuplicate) {
+      toast({
+        title: "Duplicate Variation",
+        description: "A variation with this size and color combination already exists.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
       title: "Success",
       description: isNewVariation 
@@ -68,6 +86,11 @@ const ProductVariationModal = ({
           <DialogTitle>
             {isNewVariation ? "Add New Variation" : "Edit Variation"}
           </DialogTitle>
+          <DialogDescription>
+            {isNewVariation 
+              ? "Add a new variation with unique size and color combination" 
+              : "Modify the existing variation details"}
+          </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-8rem)] px-6 pb-6">
           <div className="space-y-6">

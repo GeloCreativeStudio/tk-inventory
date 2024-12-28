@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ProductFormValues } from "@/lib/validations/product";
 import StockBadge from "../table/StockBadge";
@@ -15,11 +15,11 @@ const ProductVariationsTable = ({
   onEdit, 
   onDelete 
 }: ProductVariationsTableProps) => {
-  const hasVariations = variations && variations.length > 0;
+  const hasValidVariations = variations?.some(v => v.size && v.color);
 
-  return (
-    <div className="border rounded-lg overflow-hidden">
-      {!hasVariations ? (
+  if (!hasValidVariations) {
+    return (
+      <div className="border rounded-lg">
         <div className="flex flex-col items-center justify-center p-8 text-center">
           <div className="text-muted-foreground mb-2">
             No variations added yet
@@ -28,22 +28,28 @@ const ProductVariationsTable = ({
             Add your first product variation by clicking the "Add Variation" button above
           </div>
         </div>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="font-semibold">Size</TableHead>
-              <TableHead className="font-semibold">Color</TableHead>
-              <TableHead className="font-semibold">Stock</TableHead>
-              <TableHead className="font-semibold">Images</TableHead>
-              <TableHead className="font-semibold text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {variations.map((variation, index) => (
+      </div>
+    );
+  }
+
+  return (
+    <div className="border rounded-lg overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-muted/50">
+            <TableHead className="font-semibold">Size</TableHead>
+            <TableHead className="font-semibold">Color</TableHead>
+            <TableHead className="font-semibold">Stock</TableHead>
+            <TableHead className="font-semibold">Images</TableHead>
+            <TableHead className="font-semibold text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {variations.map((variation, index) => (
+            variation.size && variation.color ? (
               <TableRow key={variation.id}>
-                <TableCell>{variation.size || '-'}</TableCell>
-                <TableCell>{variation.color || '-'}</TableCell>
+                <TableCell>{variation.size}</TableCell>
+                <TableCell>{variation.color}</TableCell>
                 <TableCell>
                   <StockBadge stock={variation.stock} />
                 </TableCell>
@@ -69,10 +75,10 @@ const ProductVariationsTable = ({
                   </Button>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+            ) : null
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import ProductVariationsTable from "./ProductVariationsTable";
 import ProductVariationModal from "./ProductVariationModal";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ProductVariationsSectionProps {
   form: UseFormReturn<ProductFormValues>;
@@ -15,6 +16,7 @@ interface ProductVariationsSectionProps {
 const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
+  const { toast } = useToast();
 
   const addVariation = () => {
     const variations = form.getValues("variations") || [];
@@ -44,6 +46,16 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
         currentVariations.filter((_, i) => i !== index),
         { shouldValidate: true }
       );
+      toast({
+        title: "Variation Removed",
+        description: "The product variation has been removed successfully.",
+      });
+    } else {
+      toast({
+        title: "Cannot Remove Variation",
+        description: "At least one variation is required for the product.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -67,7 +79,7 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => addVariation()}
+          onClick={addVariation}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
