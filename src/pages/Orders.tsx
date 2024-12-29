@@ -17,15 +17,41 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Search } from "lucide-react";
+import { Search, Plus, Eye, Edit, Trash } from "lucide-react";
 import { testOrders } from "@/data/testOrders";
-import { OrderStatus } from "@/types/orders";
+import { Order, OrderStatus } from "@/types/orders";
 import { formatCurrency } from "@/lib/utils/currency";
+import OrderViewDialog from "@/components/orders/OrderViewDialog";
+import OrderForm from "@/components/orders/OrderForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const Orders = () => {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
 
   const filteredOrders = testOrders.filter((order) => {
     const matchesSearch =
@@ -52,14 +78,50 @@ const Orders = () => {
     }
   };
 
+  const handleCreateOrder = (data: Order) => {
+    console.log("Create order:", data);
+    toast({
+      title: "Order Created",
+      description: "The order has been created successfully.",
+    });
+    setIsFormDialogOpen(false);
+  };
+
+  const handleUpdateOrder = (data: Order) => {
+    console.log("Update order:", data);
+    toast({
+      title: "Order Updated",
+      description: "The order has been updated successfully.",
+    });
+    setIsFormDialogOpen(false);
+  };
+
+  const handleDeleteOrder = () => {
+    if (orderToDelete) {
+      console.log("Delete order:", orderToDelete.id);
+      toast({
+        title: "Order Deleted",
+        description: "The order has been deleted successfully.",
+      });
+      setOrderToDelete(null);
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
-          <p className="text-muted-foreground">
-            View and manage customer orders
-          </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
+            <p className="text-muted-foreground">
+              View and manage customer orders
+            </p>
+          </div>
+          <Button onClick={() => setIsFormDialogOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Order
+          </Button>
         </div>
 
         <Card className="p-6">
@@ -101,6 +163,7 @@ const Orders = () => {
                   <TableHead>Total Amount</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,6 +187,40 @@ const Orders = () => {
                     <TableCell>
                       {new Date(order.createdAt).toLocaleDateString()}
                     </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsViewDialogOpen(true);
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsFormDialogOpen(true);
+                          }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setOrderToDelete(order);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -131,6 +228,47 @@ const Orders = () => {
           </div>
         </Card>
       </div>
+
+      {/* View Order Dialog */}
+      <OrderViewDialog
+        order={selectedOrder}
+        open={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+      />
+
+      {/* Create/Edit Order Dialog */}
+      <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedOrder ? "Edit Order" : "Create New Order"}
+            </DialogTitle>
+          </DialogHeader>
+          <OrderForm
+            mode={selectedOrder ? "edit" : "create"}
+            initialData={selectedOrder || undefined}
+            onSubmit={selectedOrder ? handleUpdateOrder : handleCreateOrder}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the order.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteOrder}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 };
