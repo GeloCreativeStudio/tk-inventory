@@ -30,7 +30,17 @@ const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) =
       customerPhone: initialData?.customerPhone || "",
       shippingAddress: initialData?.shippingAddress || "",
       status: initialData?.status || "pending",
-      items: initialData?.items || [],
+      items: initialData?.items || [{
+        id: uuidv4(),
+        productId: "",
+        productName: "",
+        quantity: 1,
+        price: 0,
+        variation: {
+          size: "",
+          color: "",
+        },
+      }],
     },
   });
 
@@ -41,8 +51,18 @@ const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) =
       customerEmail: data.customerEmail,
       customerPhone: data.customerPhone,
       shippingAddress: data.shippingAddress,
-      status: data.status,
-      items: data.items,
+      status: data.status as OrderStatus,
+      items: data.items.map(item => ({
+        id: item.id || uuidv4(),
+        productId: item.productId,
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+        variation: {
+          size: item.variation.size,
+          color: item.variation.color,
+        },
+      })),
       totalAmount: data.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
       createdAt: initialData?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
