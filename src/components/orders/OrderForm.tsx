@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -37,7 +37,12 @@ const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) =
   const handleSubmit = (data: OrderFormValues) => {
     const orderData: Order = {
       id: initialData?.id || uuidv4(),
-      ...data,
+      customerName: data.customerName,
+      customerEmail: data.customerEmail,
+      customerPhone: data.customerPhone,
+      shippingAddress: data.shippingAddress,
+      status: data.status,
+      items: data.items,
       totalAmount: data.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
       createdAt: initialData?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -50,44 +55,84 @@ const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) =
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
-            <Input
-              label="Customer Name"
-              {...form.register("customerName")}
-              error={form.formState.errors.customerName?.message}
+            <FormField
+              control={form.control}
+              name="customerName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Customer Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <Input
-              label="Email"
-              type="email"
-              {...form.register("customerEmail")}
-              error={form.formState.errors.customerEmail?.message}
+            <FormField
+              control={form.control}
+              name="customerEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </div>
           <div className="space-y-4">
-            <Input
-              label="Phone"
-              {...form.register("customerPhone")}
-              error={form.formState.errors.customerPhone?.message}
+            <FormField
+              control={form.control}
+              name="customerPhone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <Select
-              onValueChange={(value) => form.setValue("status", value as OrderStatus)}
-              defaultValue={form.getValues("status")}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="processing">Processing</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="processing">Processing</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
-        <Textarea
-          label="Shipping Address"
-          {...form.register("shippingAddress")}
-          error={form.formState.errors.shippingAddress?.message}
+        <FormField
+          control={form.control}
+          name="shippingAddress"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Shipping Address</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <Button type="submit" className="w-full">
           {mode === "create" ? "Create Order" : "Update Order"}
