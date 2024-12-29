@@ -2,13 +2,6 @@ import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -25,6 +18,8 @@ import { Order, OrderStatus } from "@/types/orders";
 import { formatCurrency } from "@/lib/utils/currency";
 import OrderViewDialog from "@/components/orders/OrderViewDialog";
 import OrderForm from "@/components/orders/OrderForm";
+import OrderStatusSelect from "@/components/orders/OrderStatusSelect";
+import { processOrder } from "@/lib/utils/orderProcessing";
 import {
   Dialog,
   DialogContent,
@@ -41,7 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Orders = () => {
   const { toast } = useToast();
@@ -63,48 +58,24 @@ const Orders = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusColor = (status: OrderStatus) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
-      case "processing":
-        return "bg-blue-100 text-blue-800 hover:bg-blue-200";
-      case "completed":
-        return "bg-green-100 text-green-800 hover:bg-green-200";
-      case "cancelled":
-        return "bg-red-100 text-red-800 hover:bg-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 hover:bg-gray-200";
-    }
-  };
+  const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
+    const orderToUpdate = filteredOrders.find(order => order.id === orderId);
+    if (!orderToUpdate) return;
 
-  const handleCreateOrder = (data: Order) => {
-    console.log("Create order:", data);
-    toast({
-      title: "Order Created",
-      description: "The order has been created successfully.",
-    });
-    setIsFormDialogOpen(false);
-  };
-
-  const handleUpdateOrder = (data: Order) => {
-    console.log("Update order:", data);
-    toast({
-      title: "Order Updated",
-      description: "The order has been updated successfully.",
-    });
-    setIsFormDialogOpen(false);
-  };
-
-  const handleDeleteOrder = () => {
-    if (orderToDelete) {
-      console.log("Delete order:", orderToDelete.id);
+    try {
+      const updatedOrder = await processOrder(orderToUpdate, newStatus);
+      console.log("Order processed:", updatedOrder);
+      // In a real app, this would update the orders list through an API
       toast({
-        title: "Order Deleted",
-        description: "The order has been deleted successfully.",
+        title: "Order Updated",
+        description: `Order status changed to ${newStatus}`,
       });
-      setOrderToDelete(null);
-      setIsDeleteDialogOpen(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process order",
+        variant: "destructive",
+      });
     }
   };
 
@@ -180,9 +151,10 @@ const Orders = () => {
                     <TableCell>{order.items.length} items</TableCell>
                     <TableCell>{formatCurrency(order.totalAmount)}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                      </Badge>
+                      <OrderStatusSelect
+                        order={order}
+                        onStatusChange={handleStatusChange}
+                      />
                     </TableCell>
                     <TableCell>
                       {new Date(order.createdAt).toLocaleDateString()}
