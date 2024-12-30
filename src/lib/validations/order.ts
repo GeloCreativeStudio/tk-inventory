@@ -18,7 +18,9 @@ export const orderSchema = z.object({
   customerEmail: z.string().email("Invalid email address"),
   customerPhone: z.string().min(10, "Phone number must be at least 10 characters"),
   shippingAddress: z.string().min(5, "Address must be at least 5 characters"),
-  status: z.enum(['pending', 'processing', 'completed', 'cancelled']),
+  paymentStatus: z.enum(['no_payment', 'downpayment', 'paid']),
+  paymentMethod: z.enum(['cash', 'gcash', 'credit_card', 'others']),
+  status: z.enum(['pending', 'processing', 'completed', 'cancelled']).default('pending'),
   items: z.array(orderItemSchema).min(1, "At least one item is required"),
 });
 
