@@ -8,6 +8,7 @@ import OrderViewDialog from "@/components/orders/OrderViewDialog";
 import OrdersHeader from "@/components/orders/OrdersHeader";
 import OrdersDialogs from "@/components/orders/OrdersDialogs";
 import { testOrders } from "@/data/testOrders";
+import { testProducts } from "@/data/testProducts";
 
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>(testOrders);
@@ -33,13 +34,8 @@ const Orders = () => {
     });
   }, [orders, searchQuery, selectedStatus]);
 
-  const handleAddOrder = (data: Partial<Order>) => {
-    const newOrder = {
-      id: (orders.length + 1).toString(),
-      ...data as Order,
-    };
-
-    setOrders([...orders, newOrder]);
+  const handleAddOrder = (data: Order) => {
+    setOrders([...orders, data]);
     setOpen(false);
     toast({
       title: "Success",
@@ -47,11 +43,9 @@ const Orders = () => {
     });
   };
 
-  const handleEditOrder = (data: Partial<Order>) => {
-    if (!editOrder) return;
-
+  const handleEditOrder = (data: Order) => {
     const updatedOrders = orders.map((order) =>
-      order.id === editOrder.id ? { ...order, ...data } : order
+      order.id === data.id ? data : order
     );
 
     setOrders(updatedOrders);

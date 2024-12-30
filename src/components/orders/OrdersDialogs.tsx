@@ -18,12 +18,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import OrderForm from "./create/OrderForm";
 import { Order } from "@/types/orders";
 import { Product } from "@/types/inventory";
+import { testProducts } from "@/data/testProducts";
 
 interface OrdersDialogsProps {
   open: boolean;
   editOrder: Order | null;
   deleteOrder: Order | null;
-  products: Product[];
   setOpen: (open: boolean) => void;
   setEditOrder: (order: Order | null) => void;
   setDeleteOrder: (order: Order | null) => void;
@@ -36,7 +36,6 @@ const OrdersDialogs = ({
   open,
   editOrder,
   deleteOrder,
-  products,
   setOpen,
   setEditOrder,
   setDeleteOrder,
@@ -52,7 +51,7 @@ const OrdersDialogs = ({
             <DialogTitle>Create New Order</DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[calc(90vh-8rem)] px-8 pb-8">
-            <OrderForm products={products} onSubmit={handleAddOrder} />
+            <OrderForm products={testProducts} onSubmit={handleAddOrder} />
           </ScrollArea>
         </DialogContent>
       </Dialog>
@@ -64,9 +63,10 @@ const OrdersDialogs = ({
           </DialogHeader>
           <ScrollArea className="max-h-[calc(90vh-8rem)] px-8 pb-8">
             <OrderForm
-              products={products}
+              products={testProducts}
               onSubmit={handleEditOrder}
               initialData={editOrder}
+              mode="edit"
             />
           </ScrollArea>
         </DialogContent>
