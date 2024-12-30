@@ -2,6 +2,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Order } from "@/types/orders";
 import { formatCurrency } from "@/lib/utils/currency";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 interface OrdersTableProps {
   filteredOrders: Order[];
@@ -60,24 +62,30 @@ const OrdersTable = ({ filteredOrders, onView, onEdit, onDelete }: OrdersTablePr
               <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
               <TableCell className="text-right">
                 <div className="space-x-2">
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => onView(order)}
-                    className="text-slate-600 hover:text-slate-900"
+                    className="h-8 w-8 text-slate-600 hover:text-white hover:bg-slate-900"
                   >
-                    View
-                  </button>
-                  <button
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => onEdit(order)}
-                    className="text-slate-600 hover:text-slate-900"
+                    className="h-8 w-8 text-slate-600 hover:text-white hover:bg-slate-900"
                   >
-                    Edit
-                  </button>
-                  <button
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => onDelete(order)}
-                    className="text-red-600 hover:text-red-900"
+                    className="h-8 w-8 text-slate-600 hover:text-red-600"
                   >
-                    Delete
-                  </button>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
