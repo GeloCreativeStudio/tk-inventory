@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
 import { Order } from "@/types/orders";
 import OrdersTable from "@/components/orders/OrdersTable";
 import OrdersFilter from "@/components/orders/OrdersFilter";
@@ -19,7 +18,6 @@ const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const { toast } = useToast();
-  const { user } = useAuth();
 
   // Filter orders based on search query and status
   const filteredOrders = useMemo(() => {
@@ -92,7 +90,7 @@ const Orders = () => {
         />
 
         <OrdersTable
-          orders={filteredOrders}
+          filteredOrders={filteredOrders}
           onView={setViewOrder}
           onEdit={setEditOrder}
           onDelete={setDeleteOrder}
@@ -111,8 +109,9 @@ const Orders = () => {
         />
 
         <OrderViewDialog 
-          order={viewOrder} 
-          onClose={() => setViewOrder(null)} 
+          order={viewOrder}
+          open={!!viewOrder}
+          onOpenChange={() => setViewOrder(null)}
         />
       </div>
     </Layout>
