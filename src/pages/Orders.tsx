@@ -1,185 +1,120 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Plus } from "lucide-react";
-import { testOrders } from "@/data/testOrders";
-import { Order, OrderStatus } from "@/types/orders";
-import OrderViewDialog from "@/components/orders/OrderViewDialog";
-import OrderForm from "@/components/orders/OrderForm";
-import { processOrder } from "@/lib/utils/orderProcessing";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import OrdersFilter from "@/components/orders/OrdersFilter";
+import { useAuth } from "@/contexts/AuthContext";
+import { Order } from "@/types/orders";
 import OrdersTable from "@/components/orders/OrdersTable";
+import OrdersFilter from "@/components/orders/OrdersFilter";
+import OrderViewDialog from "@/components/orders/OrderViewDialog";
+import OrdersHeader from "@/components/orders/OrdersHeader";
+import OrdersDialogs from "@/components/orders/OrdersDialogs";
+import { testOrders } from "@/data/testOrders";
 
 const Orders = () => {
-  const { toast } = useToast();
+  const [orders, setOrders] = useState<Order[]>(testOrders);
+  const [open, setOpen] = useState(false);
+  const [editOrder, setEditOrder] = useState<Order | null>(null);
+  const [viewOrder, setViewOrder] = useState<Order | null>(null);
+  const [deleteOrder, setDeleteOrder] = useState<Order | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const { toast } = useToast();
+  const { user } = useAuth();
 
-  const filteredOrders = testOrders.filter((order) => {
-    const matchesSearch =
-      order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customerEmail.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+  // Filter orders based on search query and status
+  const filteredOrders = useMemo(() => {
+    return orders.filter(order => {
+      const searchMatch = searchQuery.trim() === "" || 
+        order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.customerEmail.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesSearch && matchesStatus;
-  });
+      const statusMatch = selectedStatus === "all" || 
+        order.status.toLowerCase() === selectedStatus.toLowerCase();
 
-  const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
-    const orderToUpdate = filteredOrders.find(order => order.id === orderId);
-    if (!orderToUpdate) return;
+      return searchMatch && statusMatch;
+    });
+  }, [orders, searchQuery, selectedStatus]);
 
-    try {
-      const updatedOrder = await processOrder(orderToUpdate, newStatus);
-      console.log("Order processed:", updatedOrder);
-      toast({
-        title: "Order Updated",
-        description: `Order status changed to ${newStatus}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to process order",
-        variant: "destructive",
-      });
-    }
+  const handleAddOrder = (data: Partial<Order>) => {
+    const newOrder = {
+      id: (orders.length + 1).toString(),
+      ...data as Order,
+    };
+
+    setOrders([...orders, newOrder]);
+    setOpen(false);
+    toast({
+      title: "Success",
+      description: "Order added successfully",
+    });
   };
 
-  const handleCreateOrder = (orderData: Order) => {
-    console.log("Creating order:", orderData);
+  const handleEditOrder = (data: Partial<Order>) => {
+    if (!editOrder) return;
+
+    const updatedOrders = orders.map((order) =>
+      order.id === editOrder.id ? { ...order, ...data } : order
+    );
+
+    setOrders(updatedOrders);
+    setEditOrder(null);
     toast({
-      title: "Order Created",
-      description: "New order has been created successfully",
+      title: "Success",
+      description: "Order updated successfully",
     });
-    setIsFormDialogOpen(false);
   };
 
-  const handleUpdateOrder = (orderData: Order) => {
-    console.log("Updating order:", orderData);
-    toast({
-      title: "Order Updated",
-      description: "Order has been updated successfully",
-    });
-    setIsFormDialogOpen(false);
-  };
+  const handleDeleteConfirm = () => {
+    if (!deleteOrder) return;
 
-  const handleDeleteOrder = () => {
-    if (!orderToDelete) return;
-    
-    console.log("Deleting order:", orderToDelete);
+    const filteredOrders = orders.filter(
+      (order) => order.id !== deleteOrder.id
+    );
+
+    setOrders(filteredOrders);
+    setDeleteOrder(null);
     toast({
-      title: "Order Deleted",
-      description: "Order has been deleted successfully",
+      title: "Success",
+      description: "Order deleted successfully",
     });
-    setIsDeleteDialogOpen(false);
-    setOrderToDelete(null);
   };
 
   return (
     <Layout>
       <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
-            <p className="text-muted-foreground">
-              View and manage customer orders
-            </p>
-          </div>
-          <Button onClick={() => setIsFormDialogOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Order
-          </Button>
-        </div>
+        <OrdersHeader setOpen={setOpen} />
 
-        <Card className="p-6">
-          <OrdersFilter
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            statusFilter={statusFilter}
-            onStatusFilterChange={setStatusFilter}
-          />
+        <OrdersFilter
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}
+        />
 
-          <div className="rounded-md border">
-            <OrdersTable
-              filteredOrders={filteredOrders}
-              onViewOrder={(order) => {
-                setSelectedOrder(order);
-                setIsViewDialogOpen(true);
-              }}
-              onEditOrder={(order) => {
-                setSelectedOrder(order);
-                setIsFormDialogOpen(true);
-              }}
-              onDeleteOrder={(order) => {
-                setOrderToDelete(order);
-                setIsDeleteDialogOpen(true);
-              }}
-              onStatusChange={handleStatusChange}
-            />
-          </div>
-        </Card>
+        <OrdersTable
+          orders={filteredOrders}
+          onView={setViewOrder}
+          onEdit={setEditOrder}
+          onDelete={setDeleteOrder}
+        />
+
+        <OrdersDialogs
+          open={open}
+          editOrder={editOrder}
+          deleteOrder={deleteOrder}
+          setOpen={setOpen}
+          setEditOrder={setEditOrder}
+          setDeleteOrder={setDeleteOrder}
+          handleAddOrder={handleAddOrder}
+          handleEditOrder={handleEditOrder}
+          handleDeleteConfirm={handleDeleteConfirm}
+        />
+
+        <OrderViewDialog 
+          order={viewOrder} 
+          onClose={() => setViewOrder(null)} 
+        />
       </div>
-
-      <OrderViewDialog
-        order={selectedOrder}
-        open={isViewDialogOpen}
-        onOpenChange={setIsViewDialogOpen}
-      />
-
-      <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedOrder ? "Edit Order" : "Create New Order"}
-            </DialogTitle>
-          </DialogHeader>
-          <OrderForm
-            mode={selectedOrder ? "edit" : "create"}
-            initialData={selectedOrder || undefined}
-            onSubmit={selectedOrder ? handleUpdateOrder : handleCreateOrder}
-          />
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the order.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteOrder}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Layout>
   );
 };
