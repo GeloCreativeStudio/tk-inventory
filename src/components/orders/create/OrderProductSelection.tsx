@@ -22,6 +22,17 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
     product.sku?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleAddClick = (e: React.MouseEvent, product: Product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProduct(product);
+  };
+
+  const handleProductAdd = (item: OrderItem) => {
+    onSelectProduct(item);
+    setSelectedProduct(null);
+  };
+
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -57,7 +68,7 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
                 <TableCell className="text-right">
                   <Button
                     size="sm"
-                    onClick={() => setSelectedProduct(product)}
+                    onClick={(e) => handleAddClick(e, product)}
                   >
                     Add to Order
                   </Button>
@@ -71,7 +82,7 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
       <OrderProductVariationModal
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        onAdd={onSelectProduct}
+        onAdd={handleProductAdd}
       />
     </div>
   );

@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Product, ProductVariation } from "@/types/inventory";
+import { Product } from "@/types/inventory";
 import { OrderItem } from "@/types/orders";
 import { formatCurrency } from "@/lib/utils/currency";
 import { useToast } from "@/components/ui/use-toast";
@@ -54,7 +54,10 @@ const OrderProductVariationModal = ({
     )
   );
 
-  const handleAdd = () => {
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!selectedVariation) {
       toast({
         title: "Error",
@@ -102,9 +105,15 @@ const OrderProductVariationModal = ({
     });
   };
 
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  };
+
   return (
     <Dialog open={!!product} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle>Add {product.name} to Order</DialogTitle>
           <DialogDescription>
@@ -196,7 +205,7 @@ const OrderProductVariationModal = ({
               type="button"
               variant="outline"
               className="flex-1"
-              onClick={onClose}
+              onClick={handleClose}
             >
               Cancel
             </Button>
