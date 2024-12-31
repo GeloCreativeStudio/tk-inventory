@@ -40,14 +40,19 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
     );
   };
 
-  const handleEdit = (item: OrderItem, index: number) => {
+  const handleEdit = (item: OrderItem, index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     const product = products?.find(p => p.id === item.productId);
     if (product) {
       setEditingItem({ product, index });
     }
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setConfirmDelete(index);
   };
 
@@ -105,14 +110,14 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => handleEdit(item, index)}
+                  onClick={(e) => handleEdit(item, index, e)}
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => handleDelete(index)}
+                  onClick={(e) => handleDelete(index, e)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

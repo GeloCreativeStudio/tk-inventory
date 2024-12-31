@@ -1,18 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Order, OrderStatus } from "@/types/orders";
-import { orderSchema, OrderFormValues } from "@/lib/validations/order";
+import { Form } from "@/components/ui/form";
+import { Order } from "@/types/orders";
+import { orderSchema } from "@/lib/validations/order";
 import { v4 as uuidv4 } from "uuid";
 
 interface OrderFormProps {
@@ -22,48 +13,32 @@ interface OrderFormProps {
 }
 
 const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) => {
-  const form = useForm<OrderFormValues>({
+  const form = useForm({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       customerName: initialData?.customerName || "",
       customerEmail: initialData?.customerEmail || "",
       customerPhone: initialData?.customerPhone || "",
       shippingAddress: initialData?.shippingAddress || "",
+      paymentStatus: initialData?.paymentStatus || "no_payment",
+      paymentMethod: initialData?.paymentMethod || "cash",
       status: initialData?.status || "pending",
-      items: initialData?.items || [{
-        id: uuidv4(),
-        productId: "",
-        productName: "",
-        quantity: 1,
-        price: 0,
-        variation: {
-          size: "",
-          color: "",
-        },
-      }],
+      items: initialData?.items || [],
     },
   });
 
-  const handleSubmit = (data: OrderFormValues) => {
+  const handleSubmit = (data: any) => {
     const orderData: Order = {
       id: initialData?.id || uuidv4(),
       customerName: data.customerName,
       customerEmail: data.customerEmail,
       customerPhone: data.customerPhone,
       shippingAddress: data.shippingAddress,
-      status: data.status as OrderStatus,
-      items: data.items.map(item => ({
-        id: item.id || uuidv4(),
-        productId: item.productId,
-        productName: item.productName,
-        quantity: item.quantity,
-        price: item.price,
-        variation: {
-          size: item.variation.size,
-          color: item.variation.color,
-        },
-      })),
-      totalAmount: data.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      paymentStatus: data.paymentStatus,
+      paymentMethod: data.paymentMethod,
+      status: initialData?.status || "pending",
+      items: data.items,
+      totalAmount: data.items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0),
       createdAt: initialData?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -72,7 +47,7 @@ const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) =
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
             <FormField
