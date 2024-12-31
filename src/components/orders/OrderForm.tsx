@@ -1,9 +1,25 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Order } from "@/types/orders";
-import { orderSchema } from "@/lib/validations/order";
+import { 
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage 
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Order, OrderStatus } from "@/types/orders";
+import { orderSchema, OrderFormValues } from "@/lib/validations/order";
 import { v4 as uuidv4 } from "uuid";
 
 interface OrderFormProps {
@@ -13,7 +29,7 @@ interface OrderFormProps {
 }
 
 const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) => {
-  const form = useForm({
+  const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       customerName: initialData?.customerName || "",
