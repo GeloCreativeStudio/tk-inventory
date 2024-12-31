@@ -3,11 +3,10 @@ import { Product } from "@/types/inventory";
 import { OrderItem } from "@/types/orders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ProductViewDialog from "@/components/inventory/ProductViewDialog";
-import AddToOrderDialog from "./AddToOrderDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/utils/currency";
 import { Search } from "lucide-react";
+import OrderProductVariationModal from "./OrderProductVariationModal";
 
 interface OrderProductSelectionProps {
   products: Product[];
@@ -16,8 +15,7 @@ interface OrderProductSelectionProps {
 
 const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelectionProps) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewProduct, setViewProduct] = useState<Product | null>(null);
-  const [addToOrderProduct, setAddToOrderProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -56,17 +54,10 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
                 <TableCell>
                   {product.variations.reduce((total, v) => total + v.stock, 0)}
                 </TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setViewProduct(product)}
-                  >
-                    View Details
-                  </Button>
+                <TableCell className="text-right">
                   <Button
                     size="sm"
-                    onClick={() => setAddToOrderProduct(product)}
+                    onClick={() => setSelectedProduct(product)}
                   >
                     Add to Order
                   </Button>
@@ -77,14 +68,9 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
         </Table>
       </div>
 
-      <ProductViewDialog
-        product={viewProduct}
-        onClose={() => setViewProduct(null)}
-      />
-
-      <AddToOrderDialog
-        product={addToOrderProduct}
-        onClose={() => setAddToOrderProduct(null)}
+      <OrderProductVariationModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
         onAdd={onSelectProduct}
       />
     </div>
