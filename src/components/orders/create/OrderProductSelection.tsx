@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { Product } from "@/types/inventory";
+import { OrderItem } from "@/types/orders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ProductViewDialog from "@/components/inventory/ProductViewDialog";
+import AddToOrderDialog from "./AddToOrderDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/utils/currency";
 import { Search } from "lucide-react";
 
 interface OrderProductSelectionProps {
   products: Product[];
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct: (item: OrderItem) => void;
 }
 
 const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelectionProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
+  const [addToOrderProduct, setAddToOrderProduct] = useState<Product | null>(null);
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -63,9 +66,9 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => onSelectProduct(product)}
+                    onClick={() => setAddToOrderProduct(product)}
                   >
-                    Select
+                    Add to Order
                   </Button>
                 </TableCell>
               </TableRow>
@@ -77,6 +80,12 @@ const OrderProductSelection = ({ products, onSelectProduct }: OrderProductSelect
       <ProductViewDialog
         product={viewProduct}
         onClose={() => setViewProduct(null)}
+      />
+
+      <AddToOrderDialog
+        product={addToOrderProduct}
+        onClose={() => setAddToOrderProduct(null)}
+        onAdd={onSelectProduct}
       />
     </div>
   );

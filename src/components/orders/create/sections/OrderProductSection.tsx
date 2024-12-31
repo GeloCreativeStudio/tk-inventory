@@ -1,5 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { Product } from "@/types/inventory";
+import { OrderItem } from "@/types/orders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import OrderProductSelection from "../OrderProductSelection";
 
@@ -9,20 +10,9 @@ interface OrderProductSectionProps {
 }
 
 const OrderProductSection = ({ form, products }: OrderProductSectionProps) => {
-  const handleProductSelect = (product: Product) => {
+  const handleProductSelect = (item: OrderItem) => {
     const currentItems = form.getValues("items");
-    const newItem = {
-      id: crypto.randomUUID(),
-      productId: product.id,
-      productName: product.name,
-      quantity: 1,
-      price: product.price,
-      variation: {
-        size: product.variations[0]?.size || "",
-        color: product.variations[0]?.color || "",
-      },
-    };
-    form.setValue("items", [...currentItems, newItem]);
+    form.setValue("items", [...currentItems, item]);
   };
 
   return (
