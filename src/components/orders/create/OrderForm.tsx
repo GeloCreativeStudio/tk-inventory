@@ -2,16 +2,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { formatCurrency } from "@/lib/utils/currency";
-import { Product } from "@/types/inventory";
 import { Order } from "@/types/orders";
 import { orderSchema } from "@/lib/validations/order";
 import { v4 as uuidv4 } from "uuid";
 import OrderCustomerSection from "./sections/OrderCustomerSection";
 import OrderProductSection from "./sections/OrderProductSection";
 import OrderSummarySection from "./sections/OrderSummarySection";
+import { Product } from "@/types/inventory";
 
 interface OrderFormProps {
   products: Product[];
@@ -61,7 +58,7 @@ const OrderForm = ({
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <OrderCustomerSection form={form} />
         <OrderProductSection form={form} products={products} />
-        <OrderSummarySection form={form} />
+        <OrderSummarySection form={form} products={products} />
         
         <Button type="submit" className="w-full">
           {mode === "create" ? "Create Order" : "Update Order"}

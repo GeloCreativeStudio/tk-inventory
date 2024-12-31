@@ -30,6 +30,8 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
   };
 
   const handleEdit = (item: OrderItem, index: number) => {
+    if (!products) return;
+    
     const product = products.find(p => p.id === item.productId);
     if (product) {
       setEditingItem({ product, index });
