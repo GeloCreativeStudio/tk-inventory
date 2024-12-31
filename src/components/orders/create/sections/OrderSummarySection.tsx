@@ -9,6 +9,16 @@ import OrderProductVariationModal from "../OrderProductVariationModal";
 import { Product } from "@/types/inventory";
 import { OrderItem } from "@/types/orders";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface OrderSummarySectionProps {
   form: UseFormReturn<any>;
@@ -20,6 +30,7 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
     product: Product;
     index: number;
   } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const { toast } = useToast();
 
   const calculateTotal = () => {
@@ -30,18 +41,23 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
   };
 
   const handleEdit = (item: OrderItem, index: number) => {
-    if (!products) return;
-    
-    const product = products.find(p => p.id === item.productId);
+    const product = products?.find(p => p.id === item.productId);
     if (product) {
       setEditingItem({ product, index });
     }
   };
 
   const handleDelete = (index: number) => {
+    setConfirmDelete(index);
+  };
+
+  const confirmDeleteItem = () => {
+    if (confirmDelete === null) return;
+    
     const items = form.getValues("items");
-    const updatedItems = items.filter((_: any, i: number) => i !== index);
+    const updatedItems = items.filter((_: any, i: number) => i !== confirmDelete);
     form.setValue("items", updatedItems);
+    setConfirmDelete(null);
     toast({
       title: "Item Removed",
       description: "The item has been removed from the order",
@@ -118,6 +134,23 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
           onAdd={handleUpdateItem}
         />
       )}
+
+      <AlertDialog open={confirmDelete !== null} onOpenChange={() => setConfirmDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove the item from your order. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteItem}>
+              Remove Item
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };
