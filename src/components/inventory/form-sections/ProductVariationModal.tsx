@@ -14,7 +14,9 @@ import ProductStockField from "../form-fields/ProductStockField";
 import ProductVariationImagesField from "../form-fields/ProductVariationImagesField";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "@/lib/validations/product";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface ProductVariationModalProps {
   open: boolean;
@@ -97,14 +99,32 @@ const ProductVariationModal = ({
               : "Modify the existing variation details"}
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="max-h-[calc(90vh-8rem)] px-6 pb-6">
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ProductSizeField form={form} index={variationIndex} />
-              <ProductColorField form={form} index={variationIndex} />
-            </div>
-            <ProductStockField form={form} index={variationIndex} />
-            <ProductVariationImagesField form={form} index={variationIndex} />
+        <ScrollArea className="max-h-[calc(90vh-8rem)]">
+          <div className="px-6 pb-6 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Variation Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <ProductSizeField form={form} index={variationIndex} />
+                  <ProductColorField form={form} index={variationIndex} />
+                </div>
+                <ProductStockField form={form} index={variationIndex} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Images</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProductVariationImagesField form={form} index={variationIndex} />
+              </CardContent>
+            </Card>
+
+            <Separator />
+
             <div className="flex gap-4">
               <Button
                 type="button"
