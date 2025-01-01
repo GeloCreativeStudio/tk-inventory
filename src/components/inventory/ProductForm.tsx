@@ -54,8 +54,10 @@ const ProductForm = ({ onSubmit, initialData, mode = "create" }: ProductFormProp
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <ProductMainFields form={form} />
-        <ProductVariationsSection form={form} />
+        <div className="space-y-6">
+          <ProductMainFields form={form} />
+          <ProductVariationsSection form={form} />
+        </div>
         <Button type="submit" className="w-full">
           {mode === "create" ? "Add Product" : "Update Product"}
         </Button>

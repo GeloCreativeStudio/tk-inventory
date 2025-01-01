@@ -7,7 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import ProductVariationsTable from "./ProductVariationsTable";
 import ProductVariationModal from "./ProductVariationModal";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ProductVariationsSectionProps {
   form: UseFormReturn<ProductFormValues>;
@@ -69,11 +70,9 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <Separator className="my-6" />
-      
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Product Variations</h3>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <CardTitle>Product Variations</CardTitle>
         <Button
           type="button"
           variant="outline"
@@ -84,21 +83,22 @@ const ProductVariationsSection = ({ form }: ProductVariationsSectionProps) => {
           <Plus className="h-4 w-4" />
           Add Variation
         </Button>
-      </div>
+      </CardHeader>
+      <CardContent>
+        <ProductVariationsTable
+          variations={form.watch("variations")}
+          onEdit={editVariation}
+          onDelete={removeVariation}
+        />
 
-      <ProductVariationsTable
-        variations={form.watch("variations")}
-        onEdit={editVariation}
-        onDelete={removeVariation}
-      />
-
-      <ProductVariationModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        form={form}
-        variationIndex={editingIndex}
-      />
-    </div>
+        <ProductVariationModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          form={form}
+          variationIndex={editingIndex}
+        />
+      </CardContent>
+    </Card>
   );
 };
 
