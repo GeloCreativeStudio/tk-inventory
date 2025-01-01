@@ -28,6 +28,7 @@ interface OrderSummarySectionProps {
 const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
   const [editingItem, setEditingItem] = useState<{
     product: Product;
+    item: OrderItem;
     index: number;
   } | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
@@ -46,7 +47,7 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
     
     const product = products?.find(p => p.id === item.productId);
     if (product) {
-      setEditingItem({ product, index });
+      setEditingItem({ product, item, index });
     }
   };
 
@@ -137,6 +138,7 @@ const OrderSummarySection = ({ form, products }: OrderSummarySectionProps) => {
           product={editingItem.product}
           onClose={() => setEditingItem(null)}
           onAdd={handleUpdateItem}
+          editingItem={editingItem.item}
         />
       )}
 

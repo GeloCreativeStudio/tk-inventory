@@ -6,36 +6,31 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { Product } from "@/types/inventory";
 import { OrderItem } from "@/types/orders";
-import { formatCurrency } from "@/lib/utils/currency";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import VariationSelectors from "./modal-sections/VariationSelectors";
+import QuantityInput from "./modal-sections/QuantityInput";
+import OrderSummary from "./modal-sections/OrderSummary";
+import { useState } from "react";
 
 interface OrderProductVariationModalProps {
   product: Product | null;
   onClose: () => void;
   onAdd: (item: OrderItem) => void;
+  editingItem?: OrderItem;
 }
 
 const OrderProductVariationModal = ({
   product,
   onClose,
   onAdd,
+  editingItem,
 }: OrderProductVariationModalProps) => {
   const { toast } = useToast();
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(editingItem?.variation.size || "");
+  const [selectedColor, setSelectedColor] = useState(editingItem?.variation.color || "");
+  const [quantity, setQuantity] = useState(editingItem?.quantity || 1);
 
   if (!product) return null;
 
@@ -46,6 +41,7 @@ const OrderProductVariationModal = ({
   const availableSizes = Array.from(
     new Set(product.variations.map((v) => v.size))
   );
+  
   const availableColors = Array.from(
     new Set(
       product.variations
@@ -86,7 +82,7 @@ const OrderProductVariationModal = ({
     }
 
     const orderItem: OrderItem = {
-      id: crypto.randomUUID(),
+      id: editingItem?.id || crypto.randomUUID(),
       productId: product.id,
       productName: product.name,
       quantity: quantity,
@@ -101,7 +97,7 @@ const OrderProductVariationModal = ({
     onClose();
     toast({
       title: "Success",
-      description: "Item added to order",
+      description: editingItem ? "Item updated successfully" : "Item added to order",
     });
   };
 
@@ -115,89 +111,34 @@ const OrderProductVariationModal = ({
     <Dialog open={!!product} onOpenChange={onClose}>
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
-          <DialogTitle>Add {product.name} to Order</DialogTitle>
+          <DialogTitle>{editingItem ? `Edit ${product.name}` : `Add ${product.name} to Order`}</DialogTitle>
           <DialogDescription>
             Select variation and quantity for this product
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Size</Label>
-              <Select
-                value={selectedSize}
-                onValueChange={setSelectedSize}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select size" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableSizes.map((size) => (
-                    <SelectItem key={size} value={size}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <VariationSelectors
+            product={product}
+            selectedSize={selectedSize}
+            selectedColor={selectedColor}
+            setSelectedSize={setSelectedSize}
+            setSelectedColor={setSelectedColor}
+            availableSizes={availableSizes}
+            availableColors={availableColors}
+          />
 
-            <div className="space-y-2">
-              <Label>Color</Label>
-              <Select
-                value={selectedColor}
-                onValueChange={setSelectedColor}
-                disabled={!selectedSize}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select color" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableColors.map((color) => (
-                    <SelectItem key={color} value={color}>
-                      {color}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Quantity</Label>
-            <Input
-              type="number"
-              min={1}
-              max={selectedVariation?.stock || 1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              disabled={!selectedVariation}
-            />
-            {selectedVariation && (
-              <p className="text-sm text-muted-foreground">
-                Available stock: {selectedVariation.stock}
-              </p>
-            )}
-          </div>
+          <QuantityInput
+            quantity={quantity}
+            setQuantity={setQuantity}
+            selectedVariation={selectedVariation}
+          />
 
           {selectedVariation && (
-            <div className="space-y-2">
-              <Label>Summary</Label>
-              <div className="bg-muted p-4 rounded-lg space-y-2">
-                <div className="flex justify-between">
-                  <span>Price per item:</span>
-                  <span>{formatCurrency(product.price)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Quantity:</span>
-                  <span>{quantity}</span>
-                </div>
-                <div className="flex justify-between font-medium">
-                  <span>Subtotal:</span>
-                  <span>{formatCurrency(product.price * quantity)}</span>
-                </div>
-              </div>
-            </div>
+            <OrderSummary
+              price={product.price}
+              quantity={quantity}
+            />
           )}
 
           <div className="flex gap-4">
@@ -215,7 +156,7 @@ const OrderProductVariationModal = ({
               onClick={handleAdd}
               disabled={!selectedVariation}
             >
-              Add to Order
+              {editingItem ? 'Update Item' : 'Add to Order'}
             </Button>
           </div>
         </div>
