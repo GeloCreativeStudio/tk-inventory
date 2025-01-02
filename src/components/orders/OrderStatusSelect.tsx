@@ -9,6 +9,7 @@ import {
 import { Order, OrderStatus } from "@/types/orders";
 import { validateStatusTransition } from "@/lib/utils/orderProcessing";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface OrderStatusSelectProps {
   order: Order;
@@ -19,6 +20,9 @@ interface OrderStatusSelectProps {
 const OrderStatusSelect = ({ order, onStatusChange, disabled }: OrderStatusSelectProps) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+
+  const isStaff = user?.role === 'staff';
 
   const handleStatusChange = async (newStatus: string) => {
     if (!validateStatusTransition(order.status, newStatus as OrderStatus)) {
@@ -52,7 +56,7 @@ const OrderStatusSelect = ({ order, onStatusChange, disabled }: OrderStatusSelec
     <Select
       defaultValue={order.status}
       onValueChange={handleStatusChange}
-      disabled={disabled || isUpdating}
+      disabled={disabled || isUpdating || isStaff}
     >
       <SelectTrigger className="w-[140px]">
         <SelectValue placeholder="Select status" />
