@@ -1,26 +1,18 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Order, OrderStatus } from "@/types/orders";
+import { Order } from "@/types/orders";
 import { formatCurrency } from "@/lib/utils/currency";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil, Trash2 } from "lucide-react";
-import OrderStatusSelect from "./OrderStatusSelect";
 
 interface OrdersTableProps {
   filteredOrders: Order[];
   onView: (order: Order) => void;
   onEdit: (order: Order) => void;
   onDelete: (order: Order) => void;
-  onStatusChange?: (orderId: string, newStatus: OrderStatus) => Promise<void>;
 }
 
-const OrdersTable = ({ 
-  filteredOrders, 
-  onView, 
-  onEdit, 
-  onDelete,
-  onStatusChange 
-}: OrdersTableProps) => {
+const OrdersTable = ({ filteredOrders, onView, onEdit, onDelete }: OrdersTableProps) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
@@ -63,17 +55,9 @@ const OrdersTable = ({
                 {formatCurrency(order.totalAmount)}
               </TableCell>
               <TableCell>
-                {onStatusChange ? (
-                  <OrderStatusSelect
-                    order={order}
-                    onStatusChange={onStatusChange}
-                    disabled={false}
-                  />
-                ) : (
-                  <Badge className={getStatusColor(order.status)}>
-                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                  </Badge>
-                )}
+                <Badge className={getStatusColor(order.status)}>
+                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                </Badge>
               </TableCell>
               <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
               <TableCell className="text-right">
