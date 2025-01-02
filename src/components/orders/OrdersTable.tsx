@@ -4,7 +4,6 @@ import { formatCurrency } from "@/lib/utils/currency";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil, Trash2 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 import OrderStatusSelect from "./OrderStatusSelect";
 
 interface OrdersTableProps {
@@ -22,9 +21,6 @@ const OrdersTable = ({
   onDelete,
   onStatusChange 
 }: OrdersTableProps) => {
-  const { user } = useAuth();
-  const isAdmin = user?.role === 'admin';
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
@@ -67,7 +63,7 @@ const OrdersTable = ({
                 {formatCurrency(order.totalAmount)}
               </TableCell>
               <TableCell>
-                {isAdmin && onStatusChange ? (
+                {onStatusChange ? (
                   <OrderStatusSelect
                     order={order}
                     onStatusChange={onStatusChange}
