@@ -52,7 +52,7 @@ const OrderForm = ({ onSubmit, initialData, mode = "create" }: OrderFormProps) =
       shippingAddress: data.shippingAddress,
       paymentStatus: data.paymentStatus,
       paymentMethod: data.paymentMethod,
-      status: initialData?.status || "pending",
+      status: data.status,
       items: data.items,
       totalAmount: data.items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0),
       createdAt: initialData?.createdAt || new Date().toISOString(),
